@@ -7,3 +7,13 @@ Planning to make it function by implementing:
 
 
 Lab 1: Created intro and end statements.
+
+--------
+
+New project
+Store simulator
+- Items with a Name, Price, and Category
+- Add items to cart and get a total price
+- Check out and pay
+- Members of the store get discounts
+- Print receipt
