@@ -1,17 +1,18 @@
 package ui;
 
-
+import model.Food;
 
 public class Main {
 
     public static void main(String[] args) {
+        Food f = new Food(null, null, 0);
 
-        Item i = new Item(null, 0, null);
-
-        i.makeItems();
-        i.addToCategory();
-
-        i.introStatement();
-        //TODO i.isValid();
+        f.makeFood();
+        f.printFood();
+        System.out.println("Please select which item to add.");
+        f.selectFood();
+        f.options();
+        //f.summary();
+        f.exit();
     }
 }
