@@ -1,0 +1,7 @@
+2018/09/30
+100 Hamburger: 350
+101 Apple: 100
+104 Veggie Pizza: 180
+Total calories: 630
+Calories until limit: 1870
+
