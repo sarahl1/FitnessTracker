@@ -1,13 +1,18 @@
 package tests;
 
+import exceptions.HighTotalException;
+import exceptions.LowTotalException;
+import model.Exercise;
 import model.Food;
+import model.Item;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class CalorieCounterTest {
-    public Food food;
+    public Item food;
     public Food corn;
 
     private String corn_id = "565";
@@ -20,28 +25,89 @@ public class CalorieCounterTest {
 
     @BeforeEach
     public void runBefore() {
-        corn = new Food(corn_id, corn_name, corn_cals);
-        food = new Food("1000", "Food", 0);
-        food.makeFood();
+        corn = new Food(corn_id, corn_name, corn_cals, false);
+        food = new Food("1000", "Food", 0, true);
+        food.makeItems();
         food.createRemoveList();
     }
 
     @Test
-    public void testAddCal(){
-        food.addCal(corn);
-        Food banana = new Food("300", "Banana", b_cals);
-        food.addCal(banana);
-        assertEquals(food.total, b_cals + corn_cals);
+    public void testAddCalNoException() {
+        Food banana = new Food("300", "Banana", b_cals, true);
+        try {
+            food.addCal(corn);
+            food.addCal(banana);
+        } catch (HighTotalException e) {
+            fail();
+        } catch (LowTotalException e) {
+            fail();
+        }
+        assertEquals(food.getTotal(), b_cals + corn_cals);
     }
 
     @Test
-    public void testRemoveCal(){
-        food.removeCal(corn);
-        Food apple = new Food("301", "Apple", a_cals);
-        food.removeCal(apple);
-        assertEquals(food.total, - a_cals - corn_cals);
+    public void testAddCalHighTotalException() {
+        Food banana = new Food("300", "Banana", 3000, true);
+        try {
+            food.addCal(corn);
+            food.addCal(banana);
+        } catch (HighTotalException e) {
+        } catch (LowTotalException e) {
+            fail();
+        }
+        assertEquals(food.getTotal(), 3000 + corn_cals);
     }
 
+    @Test
+    public void testAddCalLowTotalException() {
+        Item jog = new Exercise("300", "Jogging", -500);
+        try {
+            food.addCal(corn);
+            food.addCal(jog);
+        } catch (HighTotalException e) {
+            fail();
+        } catch (LowTotalException e) {
+        }
+
+        assertEquals(food.getTotal(), -500 + corn_cals);
+    }
+
+    @Test
+    public void testRemoveCalNoException(){
+        Food apple = new Food("301", "Apple", a_cals, true);
+        try {
+            food.removeCal(apple);
+        } catch (LowTotalException e) {
+            fail();
+        } catch (HighTotalException e) {
+            fail();
+        }
+        assertEquals(food.getTotal(), - a_cals);
+    }
+
+    @Test
+    public void testRemoveCalHighTotalException(){
+        Exercise jog = new Exercise("301", "Jogging", -4000);
+        try {
+            food.removeCal(jog);
+        } catch (LowTotalException e) {
+            fail();
+        } catch (HighTotalException e) {
+        }
+        assertEquals(food.getTotal(), 4000);
+    }
+
+    @Test
+    public void testRemoveCalLowTotalException(){
+        Food apple = new Food("301", "Apple", 300, true);
+        try {
+            food.removeCal(apple);
+        } catch (LowTotalException e) {
+        } catch (HighTotalException e) {
+            fail();
+        }
+        assertEquals(food.getTotal(), -300);
+    }
 
 
 }

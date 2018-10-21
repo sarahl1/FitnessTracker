@@ -1,35 +1,38 @@
 package model;
 
-
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class Food extends Item {
-    private boolean healthy;
+public class Exercise extends Item {
 
-    public Food(String id, String name, int calories, boolean healthy){
+
+    public Exercise(String id, String name, int calories){
         super(id, name, calories);
-        this.healthy = healthy;
     }
 
+    //getter
     @Override
-    public boolean getHealthy(){ return healthy;}
+    public boolean getHealthy() {
+        return true;
+    }
 
 
     //EFFECTS: returns a log of food eaten for PrintWriter
     @Override
     protected String summary(Item i){
-        return (i.id + " " + i.name + ": " + i.calories + " - " + i.getHealthy());
+        return (i.id + " " + i.name + ": " + i.calories);
     }
 
 
-    //REQUIRES: list is non-empty
+
+    //REQUIRES: food eaten is non-empty
     //EFFECTS: saves ID of food eaten to file
     @Override
     public void saveToPrevious(ArrayList<Item> list) throws IOException{
         List<String> lines = new ArrayList<>();
-        FileWriter fw = new FileWriter("previous.txt", true);
+        FileWriter fw = new FileWriter("previous.txt", false);
         PrintWriter writer = new PrintWriter(fw);
         for (Item i : list) {
             lines.add(i.getId());
@@ -47,10 +50,11 @@ public class Food extends Item {
     @Override
     public void saveToInput(ArrayList<Item> list) throws IOException {
         List<String> lines = new ArrayList<>();
-        FileWriter file = new FileWriter("inputfile.txt", true);
+        FileWriter file = new FileWriter("inputfile.txt", false);
         PrintWriter writeToInput = new PrintWriter(file);
+        lines.add(date());
         lines.add("");
-        lines.add("Food: ");
+        lines.add("Exercise: ");
         for (Item i : list) { //change summary parameter to Food f
             lines.add(summary(i));
         }
@@ -64,6 +68,10 @@ public class Food extends Item {
         writeToInput.println("");
         writeToInput.close();
     }
+
+
+
+
 
 
 }
