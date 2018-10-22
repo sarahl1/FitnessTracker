@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import static java.lang.Integer.parseInt;
 
@@ -170,6 +171,8 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
         }
     }
 
+
+
     //MODIFIES: this
     //EFFECTS: takes user input and calls find food on the ID input
     private void selectItem(HashSet<Item> hs, ArrayList<Item> done) throws NotAnItemException{
@@ -182,11 +185,11 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
     }
 
     //MODIFIES: this
-    //EFFECTS: looks for selected food in list of all food and calls addItem if it is found
+    //EFFECTS: looks for selected item in list of all items and calls addItem if it is found
     private void findItem(String i, HashSet<Item> hs, ArrayList<Item> done){
         found = false;
         for (Item f : hs){
-            if (f.id.equals(i)){
+            if (f.getId().equals(i)){
                 found = true;
                 addItem(f, done);
             }
