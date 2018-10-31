@@ -1,9 +1,7 @@
 package ui;
 
 import exceptions.*;
-import model.Exercise;
-import model.Food;
-import model.Item;
+import model.*;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -14,12 +12,17 @@ public class Main {
     private static Item f;
     private static Item e;
     private static Item i;
+    private static Nutrition n;
+    private static ItemLog itemLog;
+
 
 
     public static void main(String[] args) throws IOException {
+        itemLog = new ItemLog();
         f = new Food(null, null, 0, false);
         e = new Exercise(null, null, 0);
         i = new Food(null, null, 0, false);
+        n = new Nutrition();
         i.makeItems();
         try {
             options();

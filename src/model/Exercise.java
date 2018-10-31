@@ -6,16 +6,23 @@ import java.util.List;
 
 
 public class Exercise extends Item {
-
+    private ItemList list;
 
     public Exercise(String id, String name, int calories){
         super(id, name, calories);
+        setList(this.getAllExercise());
     }
 
     //getter
     @Override
     public boolean getHealthy() {
         return true;
+    }
+
+    @Override
+    public void setList(ItemList exerciseList) {
+        list = exerciseList;
+        exerciseList.addItem(this);
     }
 
 

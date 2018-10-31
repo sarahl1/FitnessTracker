@@ -3,7 +3,9 @@ package tests;
 import exceptions.HighTotalException;
 import exceptions.NoPreviousException;
 import model.Food;
+import model.FoodList;
 import model.Item;
+import model.ItemList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,18 +23,18 @@ public class LoadableTest {
     private Item apple;
     private Item banana;
     private ArrayList<Item> testFood;
-    private HashSet<Item> testAll;
+    private ItemList testAll;
 
     @BeforeEach
     public void runBefore() {
         testFood = new ArrayList<>();
-        testAll = new HashSet<>();
+        testAll = new FoodList();
         food = new Food("1000", "Food", 0, true);
         banana = new Food("300", "Banana", 200, true);
         apple = new Food("301", "Apple", 100, true);
-        testAll.add(food);
-        testAll.add(banana);
-        testAll.add(apple);
+        testAll.addItem(food);
+        testAll.addItem(banana);
+        testAll.addItem(apple);
         food.createRemoveList();
     }
 

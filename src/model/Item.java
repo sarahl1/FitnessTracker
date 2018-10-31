@@ -7,17 +7,19 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.lang.Integer.parseInt;
+import static ui.Main.options;
 
 public abstract class Item implements CalorieCounter, Loadable, Saveable{
     protected String id;
     protected String name;
     protected int calories;
+
+    protected ItemLog il;
+
     protected int max = 2500;
     protected int total;
     protected Scanner scan = new Scanner(System.in);
@@ -29,13 +31,13 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
 
     protected ArrayList<Item> foodEaten;
     protected ArrayList<Item> exerciseDone;
-    protected HashSet<Item> allFood;
-    protected HashSet<Item> allExercise;
+    protected Nutrition nutriFacts;
 
     public Item(String id, String name, int calories) {
         this.id = id;
         this.name = name;
         this.calories = calories;
+        nutriFacts = new Nutrition();
     }
 
     //getters
@@ -44,20 +46,23 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
     public String getName(){ return name;}
     public int getTotal() { return total;}
     public ArrayList<Item> getExerciseDone(){ return this.exerciseDone; }
-    public HashSet<Item> getAllExercise(){return this.allExercise;}
     public ArrayList<Item> getFoodEaten(){ return this.foodEaten; }
-    public HashSet<Item> getAllFood(){return this.allFood;}
     public ArrayList<Item> getListToRemove(){ return listToRemove;}
     public String getToRemove(){ return toRemove;}
     public abstract boolean getHealthy();
+
+    abstract public void setList(ItemList itemList);
+
+    public void setNutriFacts(Nutrition n){
+        this.nutriFacts = n;
+    }
+
 
     //MODIFIES: this
     //EFFECTS: instantiates Items with id, name, and calories -- then adds them to a list of all items
     public void makeItems(){
         foodEaten = new ArrayList<>();
         exerciseDone = new ArrayList<>();
-        allFood = new HashSet<>();
-        allExercise = new HashSet<>();
         Item jog = new Exercise("0011", "Jog", -100);
         Item run = new Exercise("0021", "Run", -120);
         Item swim = new Exercise("1001", "Swim", -350);
@@ -65,13 +70,6 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
         Item hockey = new Exercise("1021", "Hockey", -200);
         Item pilates = new Exercise("1031", "Pilates", -180);
         Item yoga = new Exercise("1041", "Yoga", -180);
-        allExercise.add(jog);
-        allExercise.add(run);
-        allExercise.add(swim);
-        allExercise.add(basketball);
-        allExercise.add(hockey);
-        allExercise.add(pilates);
-        allExercise.add(yoga);
         Item apple = new Food("001", "Apple", 100, true);
         Item orange = new Food("002", "Orange", 120, true);
         Item celery = new Food("003", "Celery", 60, true);
@@ -80,25 +78,29 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
         Item p_pizza = new Food("102", "Pepperoni Pizza", 200, false);
         Item h_pizza = new Food("103", "Hawaiian Pizza", 180, false);
         Item v_pizza = new Food("104", "Veggie Pizza", 180, false);
-        allFood.add(apple);
-        allFood.add(orange);
-        allFood.add(celery);
-        allFood.add(hamburger);
-        allFood.add(cheeseburger);
-        allFood.add(p_pizza);
-        allFood.add(h_pizza);
-        allFood.add(v_pizza);
+
     }
 
     //MODIFIES: this
     //EFFECTS: gives add item options and takes user input
-    public void optionAdd() throws NotAnOptionException, NotAnItemException{
+    public void optionAdd() throws NotAnOptionException, NotAnItemException {
         System.out.println("Add [1] Exercise or [2] Food?");
+        System.out.println("[3] to view nutritional facts.");
+        System.out.println("[4] to add a custom item.");
         String choice = scan.nextLine();
-        if (choice.equals("1")){
-            itemOptions(getAllExercise(), getExerciseDone());
-        } else if (choice.equals("2")){
-            itemOptions(getAllFood(), getFoodEaten());
+        if (choice.equals("1")) {
+            itemOptions(il.getAllExercise(), getExerciseDone());
+        } else if (choice.equals("2")) {
+            itemOptions(il.getAllFood(), getFoodEaten());
+        } else if (choice.equals("3")){
+            itemNutritionalOptions(il.getAllFood(), il.getAllExercise());
+        } else if (choice.equals("4")){
+            try { createItem();
+            } catch (NotAnOptionException e) {
+                e.getMessage();
+            } finally {
+                options();
+            }
         } else {
             throw new NotAnOptionException("Not an option!");
         }
@@ -127,8 +129,8 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
     //MODIFIES: this
     //EFFECTS: resumes previous log and prints log
     public void optionResume() throws IOException, NoPreviousException {
-        setDone(getAllExercise(), getExerciseDone());
-        setDone(getAllFood(), getFoodEaten());
+        setDone(il.getAllExercise(), getExerciseDone());
+        setDone(il.getAllFood(), getFoodEaten());
         setTotal();
         printLog(getFoodEaten(), getExerciseDone());
     }
@@ -138,20 +140,60 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
         printLog(getFoodEaten(), getExerciseDone());
     }
 
+    protected void itemNutritionalOptions(ItemList food, ItemList exercise){
+        printItem(food);
+        printItem(exercise);
+        selectView();
+    }//TODO: implement nutrition viewing
+
+    protected void selectView(){
+        ArrayList<String> details;
+        System.out.println("Please enter the ID of the item which you are interested in.");
+        String num = scan.nextLine();
+        Set<Item> foodMap = il.getAllFood().getLog().keySet();
+        for (Item i : foodMap){
+            if (i.id.equals(num)){
+                i.nutriFacts.setNutriFacts(i);
+                details = il.getAllFood().getLog().get(i);
+                for (int f = 0; f < i.nutriFacts.getNutriFacts().size(); f++) {
+                    details.add(i.nutriFacts.getNutriFacts().get(f));
+                }
+                printNutrition(i);
+            }
+        }
+        Set<Item> exMap = allExercise.getLog().keySet();
+        for (Item i : exMap){
+            if(i.id.equals(num)){
+                i.nutriFacts.setNutriFacts(i);
+                details = allExercise.getLog().get(i);
+                for (int f = 0; f < i.nutriFacts.getNutriFacts().size(); f++) {
+                    details.add(i.nutriFacts.getNutriFacts().get(f));
+                }
+                printNutrition(i);
+            }
+        }
+    }
+
+    protected void printNutrition(Item i){
+        for (String s : i.nutriFacts.getNutriFacts()){
+            System.out.println(s);
+        }
+    }
+
     //MODIFIES: this
     //EFFECTS: displays options for the subclass
-    protected void itemOptions(HashSet<Item> hs, ArrayList<Item> list) throws NotAnItemException{
+    protected void itemOptions(ItemList hs, ArrayList<Item> list) throws NotAnItemException{
         printItem(hs);
         selectItem(hs, list);
     }
 
     //EFFECTS: prints a list of all food with id, name, and calories
-    protected void printItem(HashSet<Item> allItems){
+    protected void printItem(ItemList allItems){
         Food f = new Food(null, null, 0, false);
         Exercise e = new Exercise (null, null, 0);
-        for (Item i : allItems){
+        Set<Item> mapItem = allItems.getLog().keySet();
+        for (Item i : mapItem){
             if (i.getClass() == Food.class)
-//            System.out.println(f.id + " " + f.name + ": " + f.calories + "\n");
                 System.out.println(f.summary(i));
             else if (i.getClass() == Exercise.class)
                 System.out.println(e.summary(i));
@@ -171,11 +213,36 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
         }
     }
 
+    private void createItem() throws NotAnOptionException{
+        System.out.println("Is it [1] food or [2] exercise? ");
+        String option = scan.nextLine();
+        System.out.println("Item ID:");
+        String id = scan.nextLine();
+        System.out.println("Item name:");
+        String name = scan.nextLine();
+        System.out.println("Number of calories:");
+        String cal = scan.nextLine();
+        System.out.println("Is it healthy? (true or false)");
+        String health = scan.nextLine();
+
+        if (option.equals("1")){
+            Item newItem = new Food(id, name, parseInt(cal), Boolean.parseBoolean(health));
+            addItem(newItem, foodEaten);
+            newItem.nutriFacts.setNutriFacts(newItem);
+        } else if (option.equals("2")){
+            Item newItem = new Exercise(id, name, parseInt(cal));
+            addItem(newItem, exerciseDone);
+            newItem.nutriFacts.setNutriFacts(newItem);
+        } else {
+            throw new NotAnOptionException("Not an option!");
+        }
+    }
+
 
 
     //MODIFIES: this
     //EFFECTS: takes user input and calls find food on the ID input
-    private void selectItem(HashSet<Item> hs, ArrayList<Item> done) throws NotAnItemException{
+    private void selectItem(ItemList hs, ArrayList<Item> done) throws NotAnItemException{
         System.out.println("Please enter the ID of the item you want to add.");
         String num = scan.nextLine();
         findItem(num, hs, done);
@@ -186,9 +253,10 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
 
     //MODIFIES: this
     //EFFECTS: looks for selected item in list of all items and calls addItem if it is found
-    private void findItem(String i, HashSet<Item> hs, ArrayList<Item> done){
+    private void findItem(String i, ItemList hs, ArrayList<Item> done){
         found = false;
-        for (Item f : hs){
+        Set<Item> itemMap = hs.getLog().keySet();
+        for (Item f : itemMap){
             if (f.getId().equals(i)){
                 found = true;
                 addItem(f, done);
@@ -229,17 +297,19 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
     public void removeItem(String toRemove, ArrayList<Item> fooddone, ArrayList<Item> exdone, ArrayList<Item> remove){
         found = false;
         for (Item f : fooddone) {
-            if (f.id.equals(toRemove)) {
+            if (f.id.equals(toRemove) && !remove.contains(f)) {
                 found = true;
                 remove.add(f);
+                }
             }
-        }
-        for (Item e : exdone){
-            if (e.id.equals(toRemove)){
-                found = true;
-                remove.add(e);
+
+        for (Item e : exdone) {
+                if (e.id.equals(toRemove) && !remove.contains(e)) {
+                    found = true;
+                    remove.add(e);
+                }
             }
-        }
+
         removeFromRemove(fooddone, exdone);
     }
 
@@ -359,7 +429,7 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
     //MODIFIES: this
     //EFFECTS: adds food from previous log to current list of food eaten
     @Override
-    public void setDone(HashSet<Item> all, ArrayList<Item> done) throws IOException, NoPreviousException {
+    public void setDone(ItemList all, ArrayList<Item> done) throws IOException, NoPreviousException {
         BufferedReader reader = new BufferedReader(new FileReader("previous.txt"));
         if (reader.readLine() == null){
             throw new NoPreviousException("No previous log found.");
@@ -367,9 +437,10 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
         int lines = 0;
         while (reader.readLine() != null) lines++;
         reader.close();
-        for (int n = 0; n < lines; n++) {
+        for (int n = 0; n <= lines; n++) {
             String line = Files.readAllLines(Paths.get("previous.txt")).get(n);
-            for (Item f : all) {
+            Set<Item> itemMap = all.getLog().keySet();
+            for (Item f : itemMap) {
                 if (line.equals(f.getId())) {
                     done.add(f);
                 }
@@ -378,4 +449,16 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Item)) return false;
+        Item item = (Item) o;
+        return Objects.equals(id, item.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

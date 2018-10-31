@@ -12,5 +12,5 @@ public interface Loadable {
 
     void setTotal() throws IOException, NoPreviousException;
 
-    void setDone(HashSet<Item> all, ArrayList<Item> done) throws IOException, NoPreviousException;
+    void setDone(ItemList all, ArrayList<Item> done) throws IOException, NoPreviousException;
 }

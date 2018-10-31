@@ -7,10 +7,18 @@ import java.util.*;
 
 public class Food extends Item {
     private boolean healthy;
+    private ItemList list;
 
     public Food(String id, String name, int calories, boolean healthy){
         super(id, name, calories);
         this.healthy = healthy;
+        setList(this.getAllFood());
+    }
+
+    public void setList(ItemList foodList){
+        if (! (list.getLog().equals(null)));
+        this.list = foodList;
+        foodList.addItem(this);
     }
 
     @Override
@@ -51,7 +59,7 @@ public class Food extends Item {
         PrintWriter writeToInput = new PrintWriter(file);
         lines.add("");
         lines.add("Food: ");
-        for (Item i : list) { //change summary parameter to Food f
+        for (Item i : list) {
             lines.add(summary(i));
         }
         lines.add(printTotal());
