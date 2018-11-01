@@ -13,12 +13,10 @@ public class Main {
     private static Item e;
     private static Item i;
     private static Nutrition n;
-    private static ItemLog itemLog;
 
 
 
     public static void main(String[] args) throws IOException {
-        itemLog = new ItemLog();
         f = new Food(null, null, 0, false);
         e = new Exercise(null, null, 0);
         i = new Food(null, null, 0, false);

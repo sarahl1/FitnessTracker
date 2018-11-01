@@ -9,10 +9,12 @@ public class ItemLog {
         allExercise = new ExerciseList();
     }
 
+    //EFFECTS: returns allFood
     public ItemList getAllFood(){
         return allFood;
     }
 
+    //EFFECTS: returns allExercise
     public ItemList getAllExercise(){
         return allExercise;
     }

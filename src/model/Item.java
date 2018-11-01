@@ -61,6 +61,7 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
     //MODIFIES: this
     //EFFECTS: instantiates Items with id, name, and calories -- then adds them to a list of all items
     public void makeItems(){
+        il = new ItemLog();
         foodEaten = new ArrayList<>();
         exerciseDone = new ArrayList<>();
         Item jog = new Exercise("0011", "Jog", -100);
@@ -78,6 +79,21 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
         Item p_pizza = new Food("102", "Pepperoni Pizza", 200, false);
         Item h_pizza = new Food("103", "Hawaiian Pizza", 180, false);
         Item v_pizza = new Food("104", "Veggie Pizza", 180, false);
+        apple.setList(il.getAllFood());
+        orange.setList(il.getAllFood());
+        celery.setList(il.getAllFood());
+        hamburger.setList(il.getAllFood());
+        cheeseburger.setList(il.getAllFood());
+        p_pizza.setList(il.getAllFood());
+        h_pizza.setList(il.getAllFood());
+        v_pizza.setList(il.getAllFood());
+        jog.setList(il.getAllExercise());
+        run.setList(il.getAllExercise());
+        swim.setList(il.getAllExercise());
+        basketball.setList(il.getAllExercise());
+        hockey.setList(il.getAllExercise());
+        pilates.setList(il.getAllExercise());
+        yoga.setList(il.getAllExercise());
 
     }
 
@@ -154,21 +170,13 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
         for (Item i : foodMap){
             if (i.id.equals(num)){
                 i.nutriFacts.setNutriFacts(i);
-                details = il.getAllFood().getLog().get(i);
-                for (int f = 0; f < i.nutriFacts.getNutriFacts().size(); f++) {
-                    details.add(i.nutriFacts.getNutriFacts().get(f));
-                }
                 printNutrition(i);
             }
         }
-        Set<Item> exMap = allExercise.getLog().keySet();
+        Set<Item> exMap = il.getAllExercise().getLog().keySet();
         for (Item i : exMap){
             if(i.id.equals(num)){
                 i.nutriFacts.setNutriFacts(i);
-                details = allExercise.getLog().get(i);
-                for (int f = 0; f < i.nutriFacts.getNutriFacts().size(); f++) {
-                    details.add(i.nutriFacts.getNutriFacts().get(f));
-                }
                 printNutrition(i);
             }
         }

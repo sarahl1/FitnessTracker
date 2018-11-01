@@ -12,13 +12,14 @@ public class Food extends Item {
     public Food(String id, String name, int calories, boolean healthy){
         super(id, name, calories);
         this.healthy = healthy;
-        setList(this.getAllFood());
+        list = null;
     }
 
-    public void setList(ItemList foodList){
-        if (! (list.getLog().equals(null)));
-        this.list = foodList;
-        foodList.addItem(this);
+    public void setList(ItemList foodList) {
+        if (list == null) {
+            list = foodList;
+            foodList.addItem(this);
+        }
     }
 
     @Override

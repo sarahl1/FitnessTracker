@@ -54,7 +54,7 @@ public class Nutrition {
                 i.setNutriFacts(this);
                 break;
             case "Jog":
-                i.nutriFacts.addFact("");
+                i.nutriFacts.addFact("Jogging is fun :3");
                 i.setNutriFacts(this);
                 break;
             case "Run":

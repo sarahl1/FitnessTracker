@@ -2,6 +2,7 @@ package model;
 
 public class ExerciseList extends ItemList {
 
+
     @Override
     public void addItem(Item i) {
         if (!getLog().containsKey(i)){

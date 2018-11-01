@@ -10,7 +10,7 @@ public class Exercise extends Item {
 
     public Exercise(String id, String name, int calories){
         super(id, name, calories);
-        setList(this.getAllExercise());
+        list = null;
     }
 
     //getter
@@ -20,9 +20,11 @@ public class Exercise extends Item {
     }
 
     @Override
-    public void setList(ItemList exerciseList) {
-        list = exerciseList;
-        exerciseList.addItem(this);
+    public void setList(ItemList exList) {
+        if (list == null) {
+            list = exList;
+            exList.addItem(this);
+        }
     }
 
 
