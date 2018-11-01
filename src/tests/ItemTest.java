@@ -40,9 +40,9 @@ public class ItemTest {
         Food banana = new Food("300", "Banana", b_cals, true);
         food.addItem(corn, food.getFoodEaten());
         food.addItem(banana, food.getFoodEaten());
-        assertEquals(food.getFoodEaten().size(), 2);
-        assertTrue(food.getFoodEaten().contains(corn));
-        assertTrue(food.getFoodEaten().contains(banana));
+        assertEquals(food.getFoodEaten().getDone().size(), 2);
+        assertTrue(food.getFoodEaten().getDone().contains(corn));
+        assertTrue(food.getFoodEaten().getDone().contains(banana));
         assertEquals(food.getTotal(), corn_cals + b_cals);
     }
 
@@ -52,9 +52,9 @@ public class ItemTest {
         Food banana = new Food("300", "Banana", b_cals, true);
         food.addItem(corn, food.getFoodEaten());
         food.addItem(banana, food.getFoodEaten());
-        assertEquals(food.getFoodEaten().size(), 2);
-        assertTrue(food.getFoodEaten().contains(corn));
-        assertTrue(food.getFoodEaten().contains(banana));
+        assertEquals(food.getFoodEaten().getDone().size(), 2);
+        assertTrue(food.getFoodEaten().getDone().contains(corn));
+        assertTrue(food.getFoodEaten().getDone().contains(banana));
         assertEquals(food.getTotal(), corn_cals + b_cals);
     }
 
@@ -64,9 +64,9 @@ public class ItemTest {
         Food banana = new Food("300", "Banana", b_cals, true);
         food.addItem(corn, food.getFoodEaten());
         food.addItem(banana, food.getFoodEaten());
-        assertEquals(food.getFoodEaten().size(), 2);
-        assertTrue(food.getFoodEaten().contains(corn));
-        assertTrue(food.getFoodEaten().contains(banana));
+        assertEquals(food.getFoodEaten().getDone().size(), 2);
+        assertTrue(food.getFoodEaten().getDone().contains(corn));
+        assertTrue(food.getFoodEaten().getDone().contains(banana));
         assertEquals(food.getTotal(), corn_cals + b_cals);
     }
 
@@ -95,10 +95,10 @@ public class ItemTest {
         food.removeItem("301", food.getFoodEaten(), food.getExerciseDone(), food.getListToRemove());
         food.removeItem("565", food.getFoodEaten(), food.getExerciseDone(), food.getListToRemove());
         food.removeFromRemove(food.getFoodEaten(), food.getExerciseDone());
-        assertEquals(food.getFoodEaten().size(), 1);
+        assertEquals(food.getFoodEaten().getDone().size(), 1);
         assertEquals(food.getListToRemove().size(), 2);
-        assertTrue(food.getFoodEaten().contains(banana));
-        assertFalse(food.getFoodEaten().contains(apple));
+        assertTrue(food.getFoodEaten().getDone().contains(banana));
+        assertFalse(food.getFoodEaten().getDone().contains(apple));
     }
 
     @Test
@@ -115,10 +115,10 @@ public class ItemTest {
         food.removeItem("301", food.getFoodEaten(), food.getExerciseDone(), food.getListToRemove());
         food.removeItem("565", food.getFoodEaten(), food.getExerciseDone(), food.getListToRemove());
         food.removeFromRemove(food.getFoodEaten(), food.getExerciseDone());
-        assertEquals(food.getFoodEaten().size(), 1);
+        assertEquals(food.getFoodEaten().getDone().size(), 1);
         assertEquals(food.getListToRemove().size(), 3);
-        assertTrue(food.getFoodEaten().contains(banana));
-        assertFalse(food.getFoodEaten().contains(apple));
+        assertTrue(food.getFoodEaten().getDone().contains(banana));
+        assertFalse(food.getFoodEaten().getDone().contains(apple));
     }
 
     @Test
@@ -131,10 +131,10 @@ public class ItemTest {
         food.removeItem("301", food.getFoodEaten(), food.getExerciseDone(), food.getListToRemove());
         food.removeItem("565", food.getFoodEaten(), food.getExerciseDone(), food.getListToRemove());
         food.removeFromRemove(food.getFoodEaten(), food.getExerciseDone());
-        assertEquals(food.getFoodEaten().size(), 1);
+        assertEquals(food.getFoodEaten().getDone().size(), 1);
         assertEquals(food.getListToRemove().size(), 2);
-        assertTrue(food.getFoodEaten().contains(banana));
-        assertFalse(food.getFoodEaten().contains(apple));
+        assertTrue(food.getFoodEaten().getDone().contains(banana));
+        assertFalse(food.getFoodEaten().getDone().contains(apple));
     }
 
 
@@ -148,7 +148,7 @@ public class ItemTest {
         food.removeItem("000", food.getFoodEaten(), food.getExerciseDone(), food.getListToRemove());
         food.removeFromRemove(food.getFoodEaten(), food.getExerciseDone());
         assertEquals(food.getListToRemove().size(), 0);
-        assertEquals(food.getFoodEaten().size(), 3);
+        assertEquals(food.getFoodEaten().getDone().size(), 3);
         assertEquals(corn_cals + b_cals + a_cals, food.getTotal());
     }
 

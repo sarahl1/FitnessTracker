@@ -6,6 +6,7 @@ Calories until limit: 2500
 
 
 Food: 
+103 Hawaiian Pizza: 180 - false
 Total calories: 0
 Calories until limit: 2500
 

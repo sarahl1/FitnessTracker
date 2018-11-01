@@ -2,10 +2,7 @@ package tests;
 
 import exceptions.HighTotalException;
 import exceptions.NoPreviousException;
-import model.Food;
-import model.FoodList;
-import model.Item;
-import model.ItemList;
+import model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,12 +19,12 @@ public class LoadableTest {
     private Item food;
     private Item apple;
     private Item banana;
-    private ArrayList<Item> testFood;
+    private ItemDone testFood;
     private ItemList testAll;
 
     @BeforeEach
     public void runBefore() {
-        testFood = new ArrayList<>();
+        testFood = new FoodEaten();
         testAll = new FoodList();
         food = new Food("1000", "Food", 0, true);
         banana = new Food("300", "Banana", 200, true);
@@ -72,7 +69,7 @@ public class LoadableTest {
             fail();
         } catch (NoPreviousException e) {
         }
-        assertEquals(0, testFood.size());
+        assertEquals(0, testFood.getDone().size());
         PrintWriter pw = new PrintWriter("previous.txt");
         pw.close();
     }
@@ -88,9 +85,9 @@ public class LoadableTest {
             food.setDone(testAll, testFood);
         } catch (NoPreviousException e) {
         }
-        assertTrue(testFood.contains(apple));
-        assertTrue(testFood.contains(banana));
-        assertEquals(2, testFood.size());
+        assertTrue(testFood.getDone().contains(apple));
+        assertTrue(testFood.getDone().contains(banana));
+        assertEquals(2, testFood.getDone().size());
         PrintWriter nw = new PrintWriter("previous.txt");
         nw.close();
     }

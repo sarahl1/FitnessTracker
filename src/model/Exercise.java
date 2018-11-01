@@ -19,6 +19,12 @@ public class Exercise extends Item {
         return true;
     }
 
+    public void setCompleted(ItemDone done){
+        this.exerciseDone = done;
+        if (!done.getDone().contains(this))
+            done.addDone(this);
+    }
+
     @Override
     public void setList(ItemList exList) {
         if (list == null) {
@@ -39,11 +45,11 @@ public class Exercise extends Item {
     //REQUIRES: food eaten is non-empty
     //EFFECTS: saves ID of food eaten to file
     @Override
-    public void saveToPrevious(ArrayList<Item> list) throws IOException{
+    public void saveToPrevious(ItemDone list) throws IOException{
         List<String> lines = new ArrayList<>();
         FileWriter fw = new FileWriter("previous.txt", false);
         PrintWriter writer = new PrintWriter(fw);
-        for (Item i : list) {
+        for (Item i : list.getDone()) {
             lines.add(i.getId());
         }
         for (String line : lines){
@@ -57,14 +63,14 @@ public class Exercise extends Item {
     //REQUIRES: food eaten is non-empty
     //EFFECTS: saves log to file
     @Override
-    public void saveToInput(ArrayList<Item> list) throws IOException {
+    public void saveToInput(ItemDone list) throws IOException {
         List<String> lines = new ArrayList<>();
         FileWriter file = new FileWriter("inputfile.txt", false);
         PrintWriter writeToInput = new PrintWriter(file);
         lines.add(date());
         lines.add("");
         lines.add("Exercise: ");
-        for (Item i : list) { //change summary parameter to Food f
+        for (Item i : list.getDone()) { //change summary parameter to Food f
             lines.add(summary(i));
         }
         lines.add(printTotal());

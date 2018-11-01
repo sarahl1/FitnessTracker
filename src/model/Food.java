@@ -17,8 +17,9 @@ public class Food extends Item {
 
 
     public void setCompleted(ItemDone done){
-        this.done = done;
-        done.addDone(this);
+        this.foodEaten = done;
+        if (!done.getDone().contains(this))
+            done.addDone(this);
     }
 
     public void setList(ItemList foodList) {
@@ -42,11 +43,11 @@ public class Food extends Item {
     //REQUIRES: list is non-empty
     //EFFECTS: saves ID of food eaten to file
     @Override
-    public void saveToPrevious(ArrayList<Item> list) throws IOException{
+    public void saveToPrevious(ItemDone list) throws IOException{
         List<String> lines = new ArrayList<>();
         FileWriter fw = new FileWriter("previous.txt", true);
         PrintWriter writer = new PrintWriter(fw);
-        for (Item i : list) {
+        for (Item i : list.getDone()) {
             lines.add(i.getId());
         }
         for (String line : lines){
@@ -60,13 +61,13 @@ public class Food extends Item {
     //REQUIRES: food eaten is non-empty
     //EFFECTS: saves log to file
     @Override
-    public void saveToInput(ArrayList<Item> list) throws IOException {
+    public void saveToInput(ItemDone list) throws IOException {
         List<String> lines = new ArrayList<>();
         FileWriter file = new FileWriter("inputfile.txt", true);
         PrintWriter writeToInput = new PrintWriter(file);
         lines.add("");
         lines.add("Food: ");
-        for (Item i : list) {
+        for (Item i : list.getDone()) {
             lines.add(summary(i));
         }
         lines.add(printTotal());

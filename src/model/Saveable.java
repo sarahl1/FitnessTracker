@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 public interface Saveable {
 
-    void saveToInput(ArrayList<Item> list) throws IOException;
+    void saveToInput(ItemDone list) throws IOException;
 
     void saveToPreviousTotal() throws IOException;
 
-    void saveToPrevious(ArrayList<Item> list) throws IOException;
+    void saveToPrevious(ItemDone list) throws IOException;
 }

@@ -1,7 +1,9 @@
 package tests;
 
 import model.Food;
+import model.FoodEaten;
 import model.Item;
+import model.ItemDone;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,12 +23,12 @@ public class SaveableTest {
     private Item food;
     private Item apple;
     private Item banana;
-    private ArrayList<Item> testFood;
+    private ItemDone testFood;
     private HashSet<Item> testAll;
 
     @BeforeEach
     public void runBefore() {
-        testFood = new ArrayList<>();
+        testFood = new FoodEaten();
         testAll = new HashSet<>();
         food = new Food("1000", "Food", 0, false);
         banana = new Food("300", "Banana", 200, true);
