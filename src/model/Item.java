@@ -29,7 +29,7 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
     protected String toRemove;
     protected ArrayList<Item> listToRemove;
 
-    protected ArrayList<Item> foodEaten;
+    protected ItemDone foodEaten;
     protected ArrayList<Item> exerciseDone;
     protected Nutrition nutriFacts;
 
@@ -46,13 +46,12 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
     public String getName(){ return name;}
     public int getTotal() { return total;}
     public ArrayList<Item> getExerciseDone(){ return this.exerciseDone; }
-    public ArrayList<Item> getFoodEaten(){ return this.foodEaten; }
     public ArrayList<Item> getListToRemove(){ return listToRemove;}
     public String getToRemove(){ return toRemove;}
     public abstract boolean getHealthy();
 
     abstract public void setList(ItemList itemList);
-
+    abstract public void setCompleted(ItemDone done);
     public void setNutriFacts(Nutrition n){
         this.nutriFacts = n;
     }
@@ -62,7 +61,7 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
     //EFFECTS: instantiates Items with id, name, and calories -- then adds them to a list of all items
     public void makeItems(){
         il = new ItemLog();
-        foodEaten = new ArrayList<>();
+        foodEaten = new FoodEaten();
         exerciseDone = new ArrayList<>();
         Item jog = new Exercise("0011", "Jog", -100);
         Item run = new Exercise("0021", "Run", -120);
@@ -117,8 +116,7 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
             } finally {
                 options();
             }
-        } else {
-            throw new NotAnOptionException("Not an option!");
+        } else { throw new NotAnOptionException("Not an option!");
         }
     }
 
@@ -237,10 +235,12 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
             Item newItem = new Food(id, name, parseInt(cal), Boolean.parseBoolean(health));
             addItem(newItem, foodEaten);
             newItem.nutriFacts.setNutriFacts(newItem);
+            il.getAllFood().addItem(newItem);
         } else if (option.equals("2")){
             Item newItem = new Exercise(id, name, parseInt(cal));
             addItem(newItem, exerciseDone);
             newItem.nutriFacts.setNutriFacts(newItem);
+            il.getAllExercise().addItem(newItem);
         } else {
             throw new NotAnOptionException("Not an option!");
         }

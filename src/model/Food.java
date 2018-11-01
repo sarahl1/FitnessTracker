@@ -15,6 +15,12 @@ public class Food extends Item {
         list = null;
     }
 
+
+    public void setCompleted(ItemDone done){
+        this.done = done;
+        done.addDone(this);
+    }
+
     public void setList(ItemList foodList) {
         if (list == null) {
             list = foodList;
