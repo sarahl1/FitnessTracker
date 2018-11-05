@@ -5,9 +5,8 @@ import exceptions.LowTotalException;
 
 public interface CalorieCounter {
 
-    void addCal(CalorieCounter c) throws HighTotalException, LowTotalException;
+    void addCal(Item c) throws HighTotalException, LowTotalException;
 
-    void removeCal(CalorieCounter f) throws LowTotalException, HighTotalException;
+    void removeCal(Item f) throws LowTotalException, HighTotalException;
 
-    int getCalories();
 }

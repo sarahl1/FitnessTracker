@@ -13,15 +13,13 @@ import java.util.stream.Collectors;
 import static java.lang.Integer.parseInt;
 import static ui.Main.options;
 
-public abstract class Item implements CalorieCounter, Loadable, Saveable{
+public abstract class Item implements Saveable{
     protected String id;
     protected String name;
     protected int calories;
 
-    protected ItemLog il;
+    public ItemLog il;
 
-    protected int max = 2500;
-    protected int total;
     protected Scanner scan = new Scanner(System.in);
     protected boolean found;
 
@@ -32,19 +30,21 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
     protected ItemDone foodEaten;
     protected ItemDone exerciseDone;
     protected Nutrition nutriFacts;
+    protected ItemList list;
 
     public Item(String id, String name, int calories) {
         this.id = id;
         this.name = name;
         this.calories = calories;
         nutriFacts = new Nutrition();
+        il = new ItemLog();
     }
 
     //getters
     public int getCalories(){ return calories;}
     public String getId(){ return id;}
     public String getName(){ return name;}
-    public int getTotal() { return total;}
+    public int getTotal() { return il.getTotal();}
     public String getToRemove(){ return toRemove;}
     public abstract boolean getHealthy();
     public ArrayList<Item> getListToRemove(){return listToRemove;}
@@ -60,7 +60,6 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
     //MODIFIES: this
     //EFFECTS: instantiates Items with id, name, and calories -- then adds them to a list of all items
     public void makeItems(){
-        il = new ItemLog();
         foodEaten = new FoodEaten();
         exerciseDone = new ExerciseDone();
         Item jog = new Exercise("0011", "Jog", -100);
@@ -123,7 +122,7 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
     //MODIFIES: this
     //EFFECTS: prints log and removes item
     public void optionRemove() throws NotAnItemException{
-        printLog(foodEaten, exerciseDone);
+        il.printLog(foodEaten, exerciseDone);
         scanRemove();
         createRemoveList();
         removeItem(getToRemove(), foodEaten, exerciseDone, getListToRemove());
@@ -136,22 +135,22 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
     //EFFECTS: prints previous log
     //         throws IOException if file is not found
     public void optionViewPrevious() throws IOException, NoPreviousException {
-        viewPrevious();
+        il.viewPrevious();
     }
 
     //REQUIRES: file is not empty
     //MODIFIES: this
     //EFFECTS: resumes previous log and prints log
     public void optionResume() throws IOException, NoPreviousException {
-        setDone(il.getAllExercise(), exerciseDone);
-        setDone(il.getAllFood(), foodEaten);
-        setTotal();
-        printLog(foodEaten, exerciseDone);
+        il.setDone(il.getAllExercise(), exerciseDone);
+        il.setDone(il.getAllFood(), foodEaten);
+        il.setTotal();
+        il.printLog(foodEaten, exerciseDone);
     }
 
     //EFFECTS: prints log
     public void optionExit(){
-        printLog(foodEaten, exerciseDone);
+        il.printLog(foodEaten, exerciseDone);
     }
 
     protected void itemNutritionalOptions(ItemList food, ItemList exercise){
@@ -211,7 +210,7 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
     public void addItem(Item f, ItemDone list){
         list.addDone(f);
         try {
-            addCal(f);
+            il.addCal(f);
         } catch (HighTotalException e) {
             System.out.println(e.getMessage());
         } catch (LowTotalException e) {
@@ -273,24 +272,24 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
     }
 
 
-    //EFFECTS: prints a summary
-    private void printLog(ItemDone foodList, ItemDone exList){
-        Food f = new Food (null, null, 0, false);
-        Exercise e = new Exercise (null, null, 0);
-        System.out.println("Summary: ");
-        System.out.println("-FOOD-");
-        for (Item i : foodList.getDone()){
-//            System.out.println(f.id + " " + f.name + ": " + f.calories );
-            System.out.println(f.summary(i));
-        }
-        System.out.println("-EXERCISE-");
-        for (Item i : exList.getDone()){
-//            System.out.println(e.id + " " + e.name + ": " + e.calories );
-            System.out.println(e.summary(i));
-        }
-        System.out.println("Total calories: " + total + "\n" +
-                "Calories until limit: " + (max - total));
-    }
+//    //EFFECTS: prints a summary
+//    private void printLog(ItemDone foodList, ItemDone exList){
+//        Food f = new Food (null, null, 0, false);
+//        Exercise e = new Exercise (null, null, 0);
+//        System.out.println("Summary: ");
+//        System.out.println("-FOOD-");
+//        for (Item i : foodList.getDone()){
+////            System.out.println(f.id + " " + f.name + ": " + f.calories );
+//            System.out.println(f.summary(i));
+//        }
+//        System.out.println("-EXERCISE-");
+//        for (Item i : exList.getDone()){
+////            System.out.println(e.id + " " + e.name + ": " + e.calories );
+//            System.out.println(e.summary(i));
+//        }
+//        System.out.println("Total calories: " + il.getTotal() + "\n" +
+//                "Calories until limit: " + (max - total));
+//    }
 
     //MODIFIES: this
     //EFFECTS: takes user input and sets it to toRemove, instantiates listToRemove
@@ -334,7 +333,7 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
             il.removeDone(f);
             il2.removeDone(f);
             try {
-                removeCal(f);
+                this.il.removeCal(f);
             } catch (LowTotalException e) {
                 System.out.println(e.getMessage());
             } catch (HighTotalException e) {
@@ -343,31 +342,32 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
         }
     }
 
-    //REQUIRES: total is non-negative
-    //MODIFIES: this
-    //EFFECTS: add calories of f to total
-    public void addCal(CalorieCounter i) throws HighTotalException, LowTotalException {
-        this.total += i.getCalories();
-        if (this.total >= 3000) {
-            throw new HighTotalException("Warning: High calorie intake. ");
-        }
-        if (this.total <= -100) {
-            throw new LowTotalException("Warning: Low calorie intake. ");
-        }
-    }
+//    //REQUIRES: total is non-negative
+//    //MODIFIES: this
+//    //EFFECTS: add calories of f to total
+//    public void addCal(CalorieCounter i) throws HighTotalException, LowTotalException {
+//        il.getTotal() += i.getCalories();
+//        if (this.total >= 3000) {
+//            throw new HighTotalException("Warning: High calorie intake. ");
+//        }
+//        if (this.total <= -100) {
+//            throw new LowTotalException("Warning: Low calorie intake. ");
+//        }
+//
+//    }
 
-    //REQUIRES: total is non-negative
-    //MODIFIES: this
-    //EFFECTS: subtract calories of f from total
-    public void removeCal(CalorieCounter i) throws LowTotalException, HighTotalException {
-        this.total -= i.getCalories();
-        if (this.total <= -100) {
-            throw new LowTotalException("Warning: Low calorie intake. ");
-        }
-        if (this.total >= 3000) {
-            throw new HighTotalException("Warning: High calorie intake. ");
-        }
-    }
+//    //REQUIRES: total is non-negative
+//    //MODIFIES: this
+//    //EFFECTS: subtract calories of f from total
+//    public void removeCal(CalorieCounter i) throws LowTotalException, HighTotalException {
+//        this.total -= i.getCalories();
+//        if (this.total <= -100) {
+//            throw new LowTotalException("Warning: Low calorie intake. ");
+//        }
+//        if (this.total >= 3000) {
+//            throw new HighTotalException("Warning: High calorie intake. ");
+//        }
+//    }
 
     //EFFECTS: prints end statement
     public void exit(){
@@ -382,48 +382,48 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
 
     abstract protected String summary(Item i);
 
-    //EFFECTS: prints total calories
-    protected String printTotal() {
-        return ("Total calories: " + total);
-    }
-
-    //EFFECTS: prints calories until limit
-    protected String printRemaining(){
-        return ("Calories until limit: " + (max - total));
-    }
-
-
-    //REQUIRES: there exists a previous log
-    //EFFECTS: prints the previous log
-    @Override
-    public void viewPrevious() throws IOException, NoPreviousException {
-        Scanner inFile = new Scanner(new FileReader("inputfile.txt"));
-        String sFile = "";
-
-        if (!(inFile.hasNextLine())){
-            throw new NoPreviousException("No previous log!");
-        }
-
-        while(inFile.hasNextLine())
-            sFile = sFile + inFile.nextLine() + "\n";
-
-        // prints to console
-        System.out.println("Previous Log: ");
-        System.out.println(sFile);
-    }
-
-    //MODIFIES: this
-    //EFFECTS: adds previous total to current total
-    @Override
-    public void setTotal() throws IOException, NoPreviousException {
-        BufferedReader reader = new BufferedReader(new FileReader("previousTOTAL.txt"));
-        if (reader.readLine() == null){
-            throw new NoPreviousException("No previous total found.");
-        }
-        String line = Files.readAllLines(Paths.get("previousTOTAL.txt")).get(0);
-        total += parseInt(line);
-    }
-
+//    //EFFECTS: prints total calories
+//    protected String printTotal() {
+//        return il.printTotal();
+//    }
+//
+//    //EFFECTS: prints calories until limit
+//    protected String printRemaining(){
+//        return il.printRemaining();
+//    }
+//
+//
+//    //REQUIRES: there exists a previous log
+//    //EFFECTS: prints the previous log
+//    @Override
+//    public void viewPrevious() throws IOException, NoPreviousException {
+//        Scanner inFile = new Scanner(new FileReader("inputfile.txt"));
+//        String sFile = "";
+//
+//        if (!(inFile.hasNextLine())){
+//            throw new NoPreviousException("No previous log!");
+//        }
+//
+//        while(inFile.hasNextLine())
+//            sFile = sFile + inFile.nextLine() + "\n";
+//
+//        // prints to console
+//        System.out.println("Previous Log: ");
+//        System.out.println(sFile);
+//    }
+//
+//    //MODIFIES: this
+//    //EFFECTS: adds previous total to current total
+//    @Override
+//    public void setTotal() throws IOException, NoPreviousException {
+//        BufferedReader reader = new BufferedReader(new FileReader("previousTOTAL.txt"));
+//        if (reader.readLine() == null){
+//            throw new NoPreviousException("No previous total found.");
+//        }
+//        String line = Files.readAllLines(Paths.get("previousTOTAL.txt")).get(0);
+//        total += parseInt(line);
+//    }
+//
     //EFFECTS: saves total to file
     @Override
     public void saveToPreviousTotal() throws IOException{
@@ -432,41 +432,32 @@ public abstract class Item implements CalorieCounter, Loadable, Saveable{
         writer.println(Integer.toString(getTotal()));
         writer.close();
     }
+//
+//    //REQUIRES: file is not empty
+//    //MODIFIES: this
+//    //EFFECTS: adds food from previous log to current list of food eaten
+//    @Override
+//    public void setDone(ItemList all, ItemDone done) throws IOException, NoPreviousException {
+//        BufferedReader reader = new BufferedReader(new FileReader("previous.txt"));
+//        if (reader.readLine() == null){
+//            throw new NoPreviousException("No previous log found.");
+//        }
+//        int lines = 0;
+//        while (reader.readLine() != null) lines++;
+//        reader.close();
+//        for (int n = 0; n <= lines; n++) {
+//            String line = Files.readAllLines(Paths.get("previous.txt")).get(n);
+//            Set<Item> itemMap = all.getLog().keySet();
+//            for (Item f : itemMap) {
+//                if (line.equals(f.getId())) {
+//                    done.addDone(f);
+//                }
+//
+//            }
+//        }
+//    }
 
-    //REQUIRES: file is not empty
-    //MODIFIES: this
-    //EFFECTS: adds food from previous log to current list of food eaten
-    @Override
-    public void setDone(ItemList all, ItemDone done) throws IOException, NoPreviousException {
-        BufferedReader reader = new BufferedReader(new FileReader("previous.txt"));
-        if (reader.readLine() == null){
-            throw new NoPreviousException("No previous log found.");
-        }
-        int lines = 0;
-        while (reader.readLine() != null) lines++;
-        reader.close();
-        for (int n = 0; n <= lines; n++) {
-            String line = Files.readAllLines(Paths.get("previous.txt")).get(n);
-            Set<Item> itemMap = all.getLog().keySet();
-            for (Item f : itemMap) {
-                if (line.equals(f.getId())) {
-                    done.addDone(f);
-                }
 
-            }
-        }
-    }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Item)) return false;
-        Item item = (Item) o;
-        return Objects.equals(id, item.id);
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }

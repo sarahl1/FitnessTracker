@@ -38,7 +38,7 @@ public class LoadableTest {
     @Test
     public void testSetTotalNoneNoPreviousException() throws IOException {
         try {
-            food.setTotal();
+            food.il.setTotal();
             fail();
         } catch (NoPreviousException e) {
         }
@@ -53,7 +53,7 @@ public class LoadableTest {
         food.addItem(banana, testFood);
         food.saveToPreviousTotal();
         try {
-            food.setTotal();
+            food.il.setTotal();
         } catch (NoPreviousException e) {
             fail();
         }
@@ -65,7 +65,7 @@ public class LoadableTest {
     @Test
     public void testSetFoodEatenNoneNoPreviousException() throws IOException{
         try {
-            food.setDone(testAll, testFood);
+            food.il.setDone(testAll, testFood);
             fail();
         } catch (NoPreviousException e) {
         }
@@ -82,7 +82,7 @@ public class LoadableTest {
         PrintWriter pw = new PrintWriter("previous.txt");
         pw.close();
         try {
-            food.setDone(testAll, testFood);
+            food.il.setDone(testAll, testFood);
         } catch (NoPreviousException e) {
         }
         assertTrue(testFood.getDone().contains(apple));

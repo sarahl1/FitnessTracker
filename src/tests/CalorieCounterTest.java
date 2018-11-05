@@ -35,8 +35,8 @@ public class CalorieCounterTest {
     public void testAddCalNoException() {
         Food banana = new Food("300", "Banana", b_cals, true);
         try {
-            food.addCal(corn);
-            food.addCal(banana);
+            food.il.addCal(corn);
+            food.il.addCal(banana);
         } catch (HighTotalException e) {
             fail();
         } catch (LowTotalException e) {
@@ -49,8 +49,8 @@ public class CalorieCounterTest {
     public void testAddCalHighTotalException() {
         Food banana = new Food("300", "Banana", 3000, true);
         try {
-            food.addCal(corn);
-            food.addCal(banana);
+            food.il.addCal(corn);
+            food.il.addCal(banana);
         } catch (HighTotalException e) {
         } catch (LowTotalException e) {
             fail();
@@ -62,8 +62,8 @@ public class CalorieCounterTest {
     public void testAddCalLowTotalException() {
         Item jog = new Exercise("300", "Jogging", -500);
         try {
-            food.addCal(corn);
-            food.addCal(jog);
+            food.il.addCal(corn);
+            food.il.addCal(jog);
         } catch (HighTotalException e) {
             fail();
         } catch (LowTotalException e) {
@@ -76,7 +76,7 @@ public class CalorieCounterTest {
     public void testRemoveCalNoException(){
         Food apple = new Food("301", "Apple", a_cals, true);
         try {
-            food.removeCal(apple);
+            food.il.removeCal(apple);
         } catch (LowTotalException e) {
             fail();
         } catch (HighTotalException e) {
@@ -89,7 +89,7 @@ public class CalorieCounterTest {
     public void testRemoveCalHighTotalException(){
         Exercise jog = new Exercise("301", "Jogging", -4000);
         try {
-            food.removeCal(jog);
+            food.il.removeCal(jog);
         } catch (LowTotalException e) {
             fail();
         } catch (HighTotalException e) {
@@ -101,7 +101,7 @@ public class CalorieCounterTest {
     public void testRemoveCalLowTotalException(){
         Food apple = new Food("301", "Apple", 300, true);
         try {
-            food.removeCal(apple);
+            food.il.removeCal(apple);
         } catch (LowTotalException e) {
         } catch (HighTotalException e) {
             fail();

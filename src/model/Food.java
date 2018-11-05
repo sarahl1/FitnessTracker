@@ -7,7 +7,6 @@ import java.util.*;
 
 public class Food extends Item {
     private boolean healthy;
-    private ItemList list;
 
     public Food(String id, String name, int calories, boolean healthy){
         super(id, name, calories);
@@ -17,9 +16,7 @@ public class Food extends Item {
 
 
     public void setCompleted(ItemDone done){
-        this.foodEaten = done;
-        if (!done.getDone().contains(this))
-            done.addDone(this);
+            this.foodEaten = done;
     }
 
     public void setList(ItemList foodList) {
@@ -70,8 +67,8 @@ public class Food extends Item {
         for (Item i : list.getDone()) {
             lines.add(summary(i));
         }
-        lines.add(printTotal());
-        lines.add(printRemaining());
+        lines.add(il.printTotal());
+        lines.add(il.printRemaining());
         for (String line : lines) {
 
             writeToInput.println(line);

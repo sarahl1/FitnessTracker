@@ -6,7 +6,6 @@ import java.util.List;
 
 
 public class Exercise extends Item {
-    private ItemList list;
 
     public Exercise(String id, String name, int calories){
         super(id, name, calories);
@@ -20,9 +19,7 @@ public class Exercise extends Item {
     }
 
     public void setCompleted(ItemDone done){
-        this.exerciseDone = done;
-        if (!done.getDone().contains(this))
-            done.addDone(this);
+            this.exerciseDone = done;
     }
 
     @Override
@@ -73,8 +70,6 @@ public class Exercise extends Item {
         for (Item i : list.getDone()) { //change summary parameter to Food f
             lines.add(summary(i));
         }
-        lines.add(printTotal());
-        lines.add(printRemaining());
         for (String line : lines) {
 
             writeToInput.println(line);
