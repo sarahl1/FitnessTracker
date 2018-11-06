@@ -28,7 +28,7 @@ public class CalorieCounterTest {
         corn = new Food(corn_id, corn_name, corn_cals, false);
         food = new Food("1000", "Food", 0, true);
         food.makeItems();
-        food.createRemoveList();
+        food.il.createRemoveList();
     }
 
     @Test

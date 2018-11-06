@@ -1,20 +1,28 @@
 package model;
 
-import exceptions.HighTotalException;
-import exceptions.LowTotalException;
-import exceptions.NoPreviousException;
+import exceptions.*;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Set;
 
 import static java.lang.Integer.parseInt;
+import static ui.Main.options;
 
 public class ItemLog implements CalorieCounter, Loadable{
     protected ItemList allFood;
     protected ItemList allExercise;
+    protected ItemDone foodEaten;
+    protected ItemDone exerciseDone;
+    protected Scanner scan = new Scanner(System.in);
+    protected boolean found;
+    protected String toRemove;
+    protected ArrayList<Item> listToRemove;
 
     protected int total;
     protected int max = 2500;
@@ -28,13 +36,288 @@ public class ItemLog implements CalorieCounter, Loadable{
     public ItemList getAllFood(){
         return allFood;
     }
-
     //EFFECTS: returns allExercise
     public ItemList getAllExercise(){
         return allExercise;
     }
-
     public int getTotal(){ return total; }
+    public ArrayList<Item> getListToRemove(){return listToRemove;}
+    public String getToRemove(){ return toRemove; }
+    public ItemDone getFoodEaten(){ return foodEaten;}
+    public ItemDone getExerciseDone(){ return exerciseDone;}
+
+    //MODIFIES: this
+    //EFFECTS: instantiates Items with id, name, and calories -- then adds them to a list of all items
+    public void makeItems(){
+        foodEaten = new FoodEaten();
+        exerciseDone = new ExerciseDone();
+        Item jog = new Exercise("0011", "Jog", -100);
+        Item run = new Exercise("0021", "Run", -120);
+        Item swim = new Exercise("1001", "Swim", -350);
+        Item basketball = new Exercise("1011", "Basketball", -100);
+        Item hockey = new Exercise("1021", "Hockey", -200);
+        Item pilates = new Exercise("1031", "Pilates", -180);
+        Item yoga = new Exercise("1041", "Yoga", -180);
+        Item apple = new Food("001", "Apple", 100, true);
+        Item orange = new Food("002", "Orange", 120, true);
+        Item celery = new Food("003", "Celery", 60, true);
+        Item hamburger = new Food("100", "Hamburger", 350, false);
+        Item cheeseburger = new Food("101", "Cheeseburger", 100, false);
+        Item p_pizza = new Food("102", "Pepperoni Pizza", 200, false);
+        Item h_pizza = new Food("103", "Hawaiian Pizza", 180, false);
+        Item v_pizza = new Food("104", "Veggie Pizza", 180, false);
+        apple.setList(allFood);
+        orange.setList(allFood);
+        celery.setList(allFood);
+        hamburger.setList(allFood);
+        cheeseburger.setList(allFood);
+        p_pizza.setList(allFood);
+        h_pizza.setList(allFood);
+        v_pizza.setList(allFood);
+        jog.setList(allExercise);
+        run.setList(allExercise);
+        swim.setList(allExercise);
+        basketball.setList(allExercise);
+        hockey.setList(allExercise);
+        pilates.setList(allExercise);
+        yoga.setList(allExercise);
+
+    }
+
+    //MODIFIES: this
+    //EFFECTS: gives add item options and takes user input
+    public void optionAdd() throws NotAnOptionException, NotAnItemException {
+        System.out.println("Add [1] Exercise or [2] Food?");
+        System.out.println("[3] to view nutritional facts.");
+        System.out.println("[4] to add a custom item.");
+        String choice = scan.nextLine();
+        if (choice.equals("1")) {
+            itemOptions(allExercise, exerciseDone);
+        } else if (choice.equals("2")) {
+            itemOptions(allFood, foodEaten);
+        } else if (choice.equals("3")){
+            itemNutritionalOptions(allFood, allExercise);
+        } else if (choice.equals("4")){
+            try { createItem();
+            } catch (NotAnOptionException e) {
+                e.getMessage();
+            } finally {
+                options();
+            }
+        } else { throw new NotAnOptionException("Not an option!");
+        }
+    }
+
+    //MODIFIES: this
+    //EFFECTS: prints log and removes item
+    public void optionRemove() throws NotAnItemException{
+        printLog(foodEaten, exerciseDone);
+        scanRemove();
+        createRemoveList();
+        removeItem(toRemove, foodEaten, exerciseDone, listToRemove);
+        if (!found){
+            throw new NotAnItemException("Not an item!");
+        }
+    }
+
+
+    //EFFECTS: prints previous log
+    //         throws IOException if file is not found
+    public void optionViewPrevious() throws IOException, NoPreviousException {
+        viewPrevious();
+    }
+
+    //REQUIRES: file is not empty
+    //MODIFIES: this
+    //EFFECTS: resumes previous log and prints log
+    public void optionResume() throws IOException, NoPreviousException {
+        setDone(allExercise, exerciseDone);
+        setDone(allFood, foodEaten);
+        setTotal();
+        printLog(foodEaten, exerciseDone);
+    }
+
+    //EFFECTS: prints log
+    public void optionExit(){
+        printLog(foodEaten, exerciseDone);
+    }
+
+    protected void itemNutritionalOptions(ItemList food, ItemList exercise){
+        printItem(food);
+        printItem(exercise);
+        selectView();
+    }//TODO: implement nutrition viewing
+
+    protected void selectView(){
+        ArrayList<String> details;
+        System.out.println("Please enter the ID of the item which you are interested in.");
+        String num = scan.nextLine();
+        Set<Item> foodMap = allFood.getLog().keySet();
+        for (Item i : foodMap){
+            if (i.id.equals(num)){
+                i.nutriFacts.setNutriFacts(i);
+                i.printNutrition();
+            }
+        }
+        Set<Item> exMap = allExercise.getLog().keySet();
+        for (Item i : exMap){
+            if(i.id.equals(num)){
+                i.nutriFacts.setNutriFacts(i);
+                i.printNutrition();
+            }
+        }
+    }
+
+    //EFFECTS: prints a list of all il with id, name, and calories
+    protected void printItem(ItemList allItems){
+        Food f = new Food(null, null, 0, false);
+        Exercise e = new Exercise (null, null, 0);
+        Set<Item> mapItem = allItems.getLog().keySet();
+        for (Item i : mapItem){
+            if (i.getClass() == Food.class)
+                System.out.println(f.summary(i));
+            else if (i.getClass() == Exercise.class)
+                System.out.println(e.summary(i));
+        }
+    }
+
+    //MODIFIES: this
+    //EFFECTS: adds il to testFood -- adds calories of the il to total
+    public void addItem(Item f, ItemDone list){
+        list.addDone(f);
+        try {
+            addCal(f);
+        } catch (HighTotalException e) {
+            System.out.println(e.getMessage());
+        } catch (LowTotalException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void createItem() throws NotAnOptionException{
+        System.out.println("Is it [1] il or [2] exercise? ");
+        String option = scan.nextLine();
+        System.out.println("Item ID:");
+        String id = scan.nextLine();
+        System.out.println("Item name:");
+        String name = scan.nextLine();
+        System.out.println("Number of calories:");
+        String cal = scan.nextLine();
+        System.out.println("Is it healthy? (true or false)");
+        String health = scan.nextLine();
+
+        if (option.equals("1")){
+            Item newItem = new Food(id, name, parseInt(cal), Boolean.parseBoolean(health));
+            addItem(newItem, foodEaten);
+            newItem.nutriFacts.setNutriFacts(newItem);
+            allFood.addItem(newItem);
+        } else if (option.equals("2")){
+            Item newItem = new Exercise(id, name, parseInt(cal));
+            addItem(newItem, exerciseDone);
+            newItem.nutriFacts.setNutriFacts(newItem);
+            allExercise.addItem(newItem);
+        } else {
+            throw new NotAnOptionException("Not an option!");
+        }
+    }
+
+
+
+    //MODIFIES: this
+    //EFFECTS: takes user input and calls find il on the ID input
+    private void selectItem(ItemList hs, ItemDone done) throws NotAnItemException{
+        System.out.println("Please enter the ID of the item you want to add.");
+        String num = scan.nextLine();
+        findItem(num, hs, done);
+        if (!found){
+            throw new NotAnItemException("Item not found!");
+        }
+    }
+
+    //MODIFIES: this
+    //EFFECTS: looks for selected item in list of all items and calls addItem if it is found
+    private void findItem(String i, ItemList hs, ItemDone done){
+        found = false;
+        Set<Item> itemMap = hs.getLog().keySet();
+        for (Item f : itemMap){
+            if (f.getId().equals(i)){
+                found = true;
+                addItem(f, done);
+            }
+        }
+    }
+
+    //MODIFIES: this
+    //EFFECTS: displays options for the subclass
+    protected void itemOptions(ItemList hs, ItemDone list) throws NotAnItemException{
+        printItem(hs);
+        selectItem(hs, list);
+    }
+
+    //MODIFIES: this
+    //EFFECTS: takes user input and sets it to toRemove, instantiates listToRemove
+    private void scanRemove(){
+        System.out.println("Enter ID of item to remove.");
+        toRemove = scan.nextLine();
+    }
+
+
+    //MODIFIES: this
+    //EFFECTS: takes user input and adds the il with input id to listToRemove
+    public void removeItem(String toRemove, ItemDone fooddone, ItemDone exdone, ArrayList<Item> remove){
+        found = false;
+        helpRemove(toRemove, fooddone, remove);
+
+        helpRemove(toRemove, exdone, remove);
+
+        removeFromRemove(fooddone, exdone);
+    }
+
+    private void helpRemove(String toRemove, ItemDone done, ArrayList<Item> remove){
+        for (Item i : done.getDone()){
+            if (i.id.equals(toRemove) && !remove.contains(i)) {
+                found = true;
+                remove.add(i);
+            }
+        }
+    }
+
+
+    //EFFECTS: instantiates a list which will hold items to remove
+    public void createRemoveList(){
+        listToRemove = new ArrayList<>();
+    }
+
+    //REQUIRES: listToRemove and food_eaten are not empty
+    //MODIFIES: this
+    //EFFECTS: remove items from food_eaten that are
+    public void removeFromRemove(ItemDone il, ItemDone il2){
+        for (Item f : listToRemove) {
+            il.removeDone(f);
+            il2.removeDone(f);
+            try {
+                this.removeCal(f);
+            } catch (LowTotalException e) {
+                System.out.println(e.getMessage());
+            } catch (HighTotalException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+
+
+    //EFFECTS: prints end statement
+    public void exit(){
+        System.out.println("Changes saved.");}
+
+    //EFFECTS: returns the date with format yyyy/MM/dd
+    protected String date() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        LocalDate localDate = LocalDate.now();
+        return dtf.format(localDate); //2016/11/16
+    }
+
 
     //REQUIRES: total is non-negative
     //MODIFIES: this
@@ -80,12 +363,10 @@ public class ItemLog implements CalorieCounter, Loadable{
         System.out.println("Summary: ");
         System.out.println("-FOOD-");
         for (Item i : foodList.getDone()){
-//            System.out.println(f.id + " " + f.name + ": " + f.calories );
             System.out.println(f.summary(i));
         }
         System.out.println("-EXERCISE-");
         for (Item i : exList.getDone()){
-//            System.out.println(e.id + " " + e.name + ": " + e.calories );
             System.out.println(e.summary(i));
         }
         System.out.println("Total calories: " + total + "\n" +
@@ -128,7 +409,7 @@ public class ItemLog implements CalorieCounter, Loadable{
 
     //REQUIRES: file is not empty
     //MODIFIES: this
-    //EFFECTS: adds food from previous log to current list of food eaten
+    //EFFECTS: adds il from previous log to current list of il eaten
     @Override
     public void setDone(ItemList all, ItemDone done) throws IOException, NoPreviousException {
         BufferedReader reader = new BufferedReader(new FileReader("previous.txt"));

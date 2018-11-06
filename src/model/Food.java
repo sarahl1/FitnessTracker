@@ -14,11 +14,14 @@ public class Food extends Item {
         list = null;
     }
 
-
+    //MODIFIES: this
+    //EFFECTS: sets foodEaten to done
     public void setCompleted(ItemDone done){
             this.foodEaten = done;
     }
 
+    //MODIFIES: THIS
+    //EFFECTS: if the list is null, set list to foodList
     public void setList(ItemList foodList) {
         if (list == null) {
             list = foodList;
@@ -30,7 +33,7 @@ public class Food extends Item {
     public boolean getHealthy(){ return healthy;}
 
 
-    //EFFECTS: returns a log of food eaten for PrintWriter
+    //EFFECTS: returns a log of il eaten for PrintWriter
     @Override
     protected String summary(Item i){
         return (i.id + " " + i.name + ": " + i.calories + " - " + i.getHealthy());
@@ -38,7 +41,7 @@ public class Food extends Item {
 
 
     //REQUIRES: list is non-empty
-    //EFFECTS: saves ID of food eaten to file
+    //EFFECTS: saves ID of il eaten to file
     @Override
     public void saveToPrevious(ItemDone list) throws IOException{
         List<String> lines = new ArrayList<>();
@@ -55,7 +58,7 @@ public class Food extends Item {
 
 
 
-    //REQUIRES: food eaten is non-empty
+    //REQUIRES: il eaten is non-empty
     //EFFECTS: saves log to file
     @Override
     public void saveToInput(ItemDone list) throws IOException {

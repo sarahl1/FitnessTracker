@@ -2,7 +2,10 @@ package model;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
 
 
 public class Exercise extends Item {
@@ -18,10 +21,14 @@ public class Exercise extends Item {
         return true;
     }
 
+    //MODIFIES: this
+    //EFFECTS: sets exerciseDone to done
     public void setCompleted(ItemDone done){
             this.exerciseDone = done;
     }
 
+    //MODIFIES: THIS
+    //EFFECTS: if the list is null, set list to exList
     @Override
     public void setList(ItemList exList) {
         if (list == null) {
@@ -31,7 +38,7 @@ public class Exercise extends Item {
     }
 
 
-    //EFFECTS: returns a log of food eaten for PrintWriter
+    //EFFECTS: returns a summary of the item with id, name, and calories
     @Override
     protected String summary(Item i){
         return (i.id + " " + i.name + ": " + i.calories);
@@ -39,8 +46,8 @@ public class Exercise extends Item {
 
 
 
-    //REQUIRES: food eaten is non-empty
-    //EFFECTS: saves ID of food eaten to file
+    //REQUIRES: il eaten is non-empty
+    //EFFECTS: saves ID of il eaten to file
     @Override
     public void saveToPrevious(ItemDone list) throws IOException{
         List<String> lines = new ArrayList<>();
@@ -57,14 +64,14 @@ public class Exercise extends Item {
 
 
 
-    //REQUIRES: food eaten is non-empty
+    //REQUIRES: il eaten is non-empty
     //EFFECTS: saves log to file
     @Override
     public void saveToInput(ItemDone list) throws IOException {
         List<String> lines = new ArrayList<>();
         FileWriter file = new FileWriter("inputfile.txt", false);
         PrintWriter writeToInput = new PrintWriter(file);
-        lines.add(date());
+        lines.add(il.date());
         lines.add("");
         lines.add("Exercise: ");
         for (Item i : list.getDone()) { //change summary parameter to Food f

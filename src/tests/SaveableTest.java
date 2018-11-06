@@ -1,9 +1,6 @@
 package tests;
 
-import model.Food;
-import model.FoodEaten;
-import model.Item;
-import model.ItemDone;
+import model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +17,7 @@ import static java.lang.Integer.parseInt;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SaveableTest {
-    private Item food;
+    private ItemLog food;
     private Item apple;
     private Item banana;
     private ItemDone testFood;
@@ -30,11 +27,10 @@ public class SaveableTest {
     public void runBefore() {
         testFood = new FoodEaten();
         testAll = new HashSet<>();
-        food = new Food("1000", "Food", 0, false);
+        food = new ItemLog();
         banana = new Food("300", "Banana", 200, true);
         apple = new Food("301", "Apple", 100, true);
         food.createRemoveList();
-        testAll.add(food);
         testAll.add(banana);
         testAll.add(apple);
     }
@@ -44,7 +40,7 @@ public class SaveableTest {
     public void testSaveToTotal() throws IOException{
         food.addItem(apple, testFood);
         food.addItem(banana, testFood);
-        food.saveToPreviousTotal();
+        banana.saveToPreviousTotal();
         String line = Files.readAllLines(Paths.get("previousTOTAL.txt")).get(0);
         assertEquals(food.getTotal(), parseInt(line));
         PrintWriter pw = new PrintWriter("previousTOTAL.txt");
@@ -55,7 +51,7 @@ public class SaveableTest {
 
     @Test
     public void testSaveToTotalNone() throws IOException {
-        food.saveToPreviousTotal();
+        banana.saveToPreviousTotal();
         String line = Files.readAllLines(Paths.get("previousTOTAL.txt")).get(0);
         assertEquals(food.getTotal(), parseInt(line));
         PrintWriter pw = new PrintWriter("previousTOTAL.txt");
@@ -66,7 +62,7 @@ public class SaveableTest {
     public void testSaveToInputList() throws IOException {
         food.addItem(apple, testFood);
         food.addItem(banana, testFood);
-        food.saveToPrevious(testFood);
+        banana.saveToPrevious(testFood);
         BufferedReader reader = new BufferedReader(new FileReader("previous.txt"));
         int lines = 0;
         while (reader.readLine() != null) lines++;
@@ -80,7 +76,7 @@ public class SaveableTest {
 
     @Test
     public void testSaveToInputListNone() throws IOException {
-        food.saveToPrevious(testFood);
+        banana.saveToPrevious(testFood);
         BufferedReader reader = new BufferedReader(new FileReader("previous.txt"));
         int lines = 0;
         while (reader.readLine() != null) lines++;

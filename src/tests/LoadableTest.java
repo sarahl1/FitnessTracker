@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class LoadableTest {
-    private Item food;
+    private ItemLog food;
     private Item apple;
     private Item banana;
     private ItemDone testFood;
@@ -26,10 +26,9 @@ public class LoadableTest {
     public void runBefore() {
         testFood = new FoodEaten();
         testAll = new FoodList();
-        food = new Food("1000", "Food", 0, true);
+        food = new ItemLog();
         banana = new Food("300", "Banana", 200, true);
         apple = new Food("301", "Apple", 100, true);
-        testAll.addItem(food);
         testAll.addItem(banana);
         testAll.addItem(apple);
         food.createRemoveList();
@@ -38,7 +37,7 @@ public class LoadableTest {
     @Test
     public void testSetTotalNoneNoPreviousException() throws IOException {
         try {
-            food.il.setTotal();
+            food.setTotal();
             fail();
         } catch (NoPreviousException e) {
         }
@@ -51,9 +50,9 @@ public class LoadableTest {
     public void testSetTotal() throws IOException {
         food.addItem(apple, testFood);
         food.addItem(banana, testFood);
-        food.saveToPreviousTotal();
+        banana.saveToPreviousTotal();
         try {
-            food.il.setTotal();
+            food.setTotal();
         } catch (NoPreviousException e) {
             fail();
         }
@@ -65,7 +64,7 @@ public class LoadableTest {
     @Test
     public void testSetFoodEatenNoneNoPreviousException() throws IOException{
         try {
-            food.il.setDone(testAll, testFood);
+            food.setDone(testAll, testFood);
             fail();
         } catch (NoPreviousException e) {
         }
@@ -78,11 +77,11 @@ public class LoadableTest {
     public void testSetFoodEaten() throws IOException{
         food.addItem(apple, testFood);
         food.addItem(banana, testFood);
-        food.saveToPrevious(testFood);
+        banana.saveToPrevious(testFood);
         PrintWriter pw = new PrintWriter("previous.txt");
         pw.close();
         try {
-            food.il.setDone(testAll, testFood);
+            food.setDone(testAll, testFood);
         } catch (NoPreviousException e) {
         }
         assertTrue(testFood.getDone().contains(apple));
