@@ -25,18 +25,17 @@ public class ItemLog implements CalorieCounter, Loadable{
     protected ArrayList<Item> listToRemove;
 
     protected int total;
-    protected int max = 2500;
+    protected int MAX_TOTAL = 2500;
 
     public ItemLog(){
         allFood = new FoodList();
         allExercise = new ExerciseList();
     }
 
-    //EFFECTS: returns allFood
+    //EFFECTS: getters
     public ItemList getAllFood(){
         return allFood;
     }
-    //EFFECTS: returns allExercise
     public ItemList getAllExercise(){
         return allExercise;
     }
@@ -86,6 +85,7 @@ public class ItemLog implements CalorieCounter, Loadable{
 
     //MODIFIES: this
     //EFFECTS: gives add item options and takes user input
+    //         throws NotAnOptionException if user enters an invalid input
     public void optionAdd() throws NotAnOptionException, NotAnItemException {
         System.out.println("Add [1] Exercise or [2] Food?");
         System.out.println("[3] to view nutritional facts.");
@@ -142,25 +142,26 @@ public class ItemLog implements CalorieCounter, Loadable{
         printLog(foodEaten, exerciseDone);
     }
 
+    //EFFECTS: calls printItem on the lists of all food and all exercise
     protected void itemNutritionalOptions(ItemList food, ItemList exercise){
         printItem(food);
         printItem(exercise);
         selectView();
     }//TODO: implement nutrition viewing
 
+    //EFFECTS: allows user to select item to view nutritional facts of
     protected void selectView(){
-        ArrayList<String> details;
         System.out.println("Please enter the ID of the item which you are interested in.");
         String num = scan.nextLine();
         Set<Item> foodMap = allFood.getLog().keySet();
-        for (Item i : foodMap){
-            if (i.id.equals(num)){
-                i.nutriFacts.setNutriFacts(i);
-                i.printNutrition();
-            }
-        }
+        printNutritionHelper(foodMap, num);
         Set<Item> exMap = allExercise.getLog().keySet();
-        for (Item i : exMap){
+        printNutritionHelper(exMap, num);
+    }
+
+    //EFFECTS: sets the item's nutritional facts and prints the nutritional facts
+    private void printNutritionHelper(Set<Item> map, String num){
+        for (Item i : map){
             if(i.id.equals(num)){
                 i.nutriFacts.setNutriFacts(i);
                 i.printNutrition();
@@ -194,8 +195,10 @@ public class ItemLog implements CalorieCounter, Loadable{
         }
     }
 
+    //EFFECTS: prompts the user to give information about their new item
+    //         throws NotAnOptionException if they do not choose to create food or exercise
     private void createItem() throws NotAnOptionException{
-        System.out.println("Is it [1] il or [2] exercise? ");
+        System.out.println("Is it [1] food or [2] exercise? ");
         String option = scan.nextLine();
         System.out.println("Item ID:");
         String id = scan.nextLine();
@@ -207,19 +210,32 @@ public class ItemLog implements CalorieCounter, Loadable{
         String health = scan.nextLine();
 
         if (option.equals("1")){
-            Item newItem = new Food(id, name, parseInt(cal), Boolean.parseBoolean(health));
-            addItem(newItem, foodEaten);
-            newItem.nutriFacts.setNutriFacts(newItem);
-            allFood.addItem(newItem);
+            createType(id, name, cal, health, "food");
         } else if (option.equals("2")){
-            Item newItem = new Exercise(id, name, parseInt(cal));
-            addItem(newItem, exerciseDone);
-            newItem.nutriFacts.setNutriFacts(newItem);
-            allExercise.addItem(newItem);
+            createType(id, name, cal, health,"exercise");
         } else {
             throw new NotAnOptionException("Not an option!");
         }
     }
+
+    //EFFECTS: creates the item using information from createItem and adds it to the ItemDone list,
+    //         and sets nutritional facts
+    private void createType(String id, String name, String cal, String health, String type){
+        if (type == "food"){
+            Item newItem = new Food(id, name, parseInt(cal), Boolean.parseBoolean(health));
+            addItem(newItem, foodEaten);
+            newItem.nutriFacts.setNutriFacts(newItem);
+            newItem.list.addItem(newItem);
+        }
+        else if (type == "exercise"){
+            Item newItem = new Exercise(id, name, parseInt(cal));
+            addItem(newItem, exerciseDone);
+            newItem.nutriFacts.setNutriFacts(newItem);
+            newItem.list.addItem(newItem);
+        }
+
+    }
+
 
 
 
@@ -353,7 +369,7 @@ public class ItemLog implements CalorieCounter, Loadable{
 
     //EFFECTS: prints calories until limit
     protected String printRemaining(){
-        return ("Calories until limit: " + (max - total));
+        return ("Calories until limit: " + (MAX_TOTAL - total));
     }
 
     //EFFECTS: prints a summary
@@ -370,7 +386,7 @@ public class ItemLog implements CalorieCounter, Loadable{
             System.out.println(e.summary(i));
         }
         System.out.println("Total calories: " + total + "\n" +
-                "Calories until limit: " + (max - total));
+                "Calories until limit: " + (MAX_TOTAL - total));
     }
 
 

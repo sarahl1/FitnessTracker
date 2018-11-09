@@ -4,6 +4,8 @@ Exercise:
 
 
 Food: 
+102 Pepperoni Pizza: 200 - false
+103 Hawaiian Pizza: 180 - false
 Total calories: 0
 Calories until limit: 2500
 

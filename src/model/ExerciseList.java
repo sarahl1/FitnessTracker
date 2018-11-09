@@ -11,11 +11,4 @@ public class ExerciseList extends ItemList {
         }
     }
 
-//    @Override
-//    public void removeItem(Item i) {
-//        if (getLog().containsKey(i)){
-//            getLog().remove(i);
-//            i.setList(null);
-//        }
-//    }
 }

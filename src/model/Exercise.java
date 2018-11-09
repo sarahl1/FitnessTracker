@@ -24,7 +24,7 @@ public class Exercise extends Item {
     //MODIFIES: this
     //EFFECTS: sets exerciseDone to done
     public void setCompleted(ItemDone done){
-            this.exerciseDone = done;
+            this.complete = done;
     }
 
     //MODIFIES: THIS

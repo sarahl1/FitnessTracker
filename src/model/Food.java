@@ -17,7 +17,7 @@ public class Food extends Item {
     //MODIFIES: this
     //EFFECTS: sets foodEaten to done
     public void setCompleted(ItemDone done){
-            this.foodEaten = done;
+            this.complete = done;
     }
 
     //MODIFIES: THIS

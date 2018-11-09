@@ -20,13 +20,10 @@ public abstract class Item implements Saveable{
 
     public ItemLog il;
 
-
-
-    protected ItemDone foodEaten;
-    protected ItemDone exerciseDone;
-
+    protected ItemDone complete;
 
     protected Nutrition nutriFacts;
+
     protected ItemList list;
 
     public Item(String id, String name, int calories) {
@@ -41,19 +38,24 @@ public abstract class Item implements Saveable{
     public int getCalories(){ return calories;}
     public String getId(){ return id;}
     public String getName(){ return name;}
-    public int getTotal() { return il.getTotal();}
     public abstract boolean getHealthy();
+
     abstract public void setList(ItemList itemList);
     abstract public void setCompleted(ItemDone done);
+
     public void setNutriFacts(Nutrition n){
         this.nutriFacts = n;
     }
+
+    public int getTotal() { return il.getTotal();}
     public ItemDone getFoodEaten(){ return il.foodEaten;}
     public ItemDone getExerciseDone(){ return il.exerciseDone;}
 
     //MODIFIES: this
     //EFFECTS: instantiates Items with id, name, and calories -- then adds them to a list of all items
-    public void makeItems(){ il.makeItems();}
+    public void makeItems(){
+        il.makeItems();
+    }
 
     //MODIFIES: this
     //EFFECTS: gives add item options and takes user input
