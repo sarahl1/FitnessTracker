@@ -3,20 +3,12 @@ package model;
 import exceptions.*;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static java.lang.Integer.parseInt;
-import static ui.Main.options;
-
 public abstract class Item implements Saveable{
     protected String id;
     protected String name;
     protected int calories;
+//    protected String portion;
+
 
     public ItemLog il;
 
@@ -108,7 +100,7 @@ public abstract class Item implements Saveable{
     public void saveToPreviousTotal() throws IOException{
         FileWriter fw = new FileWriter("previousTOTAL.txt", false);
         PrintWriter writer = new PrintWriter(fw);
-        writer.println(Integer.toString(getTotal()));
+        writer.println(Double.toString(getTotal()));
         writer.close();
     }
 

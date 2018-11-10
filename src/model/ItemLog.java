@@ -24,6 +24,8 @@ public class ItemLog implements CalorieCounter, Loadable{
     protected String toRemove;
     protected ArrayList<Item> listToRemove;
 
+    private JSONRead jsonReader;
+
     protected int total;
     protected int MAX_TOTAL = 2500;
 
@@ -33,9 +35,7 @@ public class ItemLog implements CalorieCounter, Loadable{
     }
 
     //EFFECTS: getters
-    public ItemList getAllFood(){
-        return allFood;
-    }
+    public ItemList getAllFood(){ return jsonReader.getAllFood(); }
     public ItemList getAllExercise(){
         return allExercise;
     }
@@ -48,31 +48,20 @@ public class ItemLog implements CalorieCounter, Loadable{
     //MODIFIES: this
     //EFFECTS: instantiates Items with id, name, and calories -- then adds them to a list of all items
     public void makeItems(){
+        jsonReader = new JSONRead();
         foodEaten = new FoodEaten();
         exerciseDone = new ExerciseDone();
         Item jog = new Exercise("0011", "Jog", -100);
         Item run = new Exercise("0021", "Run", -120);
-        Item swim = new Exercise("1001", "Swim", -350);
+        Item swim = new Exercise("1001", "Swim", -300);
+        Item cardio1 = new Exercise("1002", "Cardio (20 mins)", -100);
+        Item strength1 = new Exercise("1002", "Strength Training", -100);
         Item basketball = new Exercise("1011", "Basketball", -100);
         Item hockey = new Exercise("1021", "Hockey", -200);
         Item pilates = new Exercise("1031", "Pilates", -180);
         Item yoga = new Exercise("1041", "Yoga", -180);
-        Item apple = new Food("001", "Apple", 100, true);
-        Item orange = new Food("002", "Orange", 120, true);
-        Item celery = new Food("003", "Celery", 60, true);
-        Item hamburger = new Food("100", "Hamburger", 350, false);
-        Item cheeseburger = new Food("101", "Cheeseburger", 100, false);
-        Item p_pizza = new Food("102", "Pepperoni Pizza", 200, false);
-        Item h_pizza = new Food("103", "Hawaiian Pizza", 180, false);
-        Item v_pizza = new Food("104", "Veggie Pizza", 180, false);
-        apple.setList(allFood);
-        orange.setList(allFood);
-        celery.setList(allFood);
-        hamburger.setList(allFood);
-        cheeseburger.setList(allFood);
-        p_pizza.setList(allFood);
-        h_pizza.setList(allFood);
-        v_pizza.setList(allFood);
+        cardio1.setList(allExercise);
+        strength1.setList(allExercise);
         jog.setList(allExercise);
         run.setList(allExercise);
         swim.setList(allExercise);
@@ -80,9 +69,10 @@ public class ItemLog implements CalorieCounter, Loadable{
         hockey.setList(allExercise);
         pilates.setList(allExercise);
         yoga.setList(allExercise);
+        allFood = jsonReader.getAllFood();
 
     }
-
+//TODO: write new item to JSON
     //MODIFIES: this
     //EFFECTS: gives add item options and takes user input
     //         throws NotAnOptionException if user enters an invalid input
@@ -94,7 +84,7 @@ public class ItemLog implements CalorieCounter, Loadable{
         if (choice.equals("1")) {
             itemOptions(allExercise, exerciseDone);
         } else if (choice.equals("2")) {
-            itemOptions(allFood, foodEaten);
+            searchOption();
         } else if (choice.equals("3")){
             itemNutritionalOptions(allFood, allExercise);
         } else if (choice.equals("4")){
@@ -147,7 +137,7 @@ public class ItemLog implements CalorieCounter, Loadable{
         printItem(food);
         printItem(exercise);
         selectView();
-    }//TODO: implement nutrition viewing
+    }
 
     //EFFECTS: allows user to select item to view nutritional facts of
     protected void selectView(){
@@ -173,6 +163,7 @@ public class ItemLog implements CalorieCounter, Loadable{
     protected void printItem(ItemList allItems){
         Food f = new Food(null, null, 0, false);
         Exercise e = new Exercise (null, null, 0);
+        System.out.printf("%-5s %-20s %-7s %-5s \n", "ID", "Name", "KCals", "Healthy?");
         Set<Item> mapItem = allItems.getLog().keySet();
         for (Item i : mapItem){
             if (i.getClass() == Food.class)
@@ -180,6 +171,26 @@ public class ItemLog implements CalorieCounter, Loadable{
             else if (i.getClass() == Exercise.class)
                 System.out.println(e.summary(i));
         }
+    }
+
+    //EFFECTS: prompts user to search for an item,
+    //         throws NotAnItemException if item is not found
+    private void searchOption() throws NotAnItemException {
+        System.out.println("Enter food keyword:");
+        String input = scan.nextLine();
+        search(input);
+    }
+
+    //EFFECTS: searches allFood for the food name matching input,
+    //         throws NotAnItemException if item is not found
+    private void search(String input) throws NotAnItemException {
+        ItemList hasString = new FoodList();
+        for (Item i : allFood.getLog().keySet()){
+            if (i.name.toLowerCase().contains(input.toLowerCase())){
+                hasString.addItem(i);
+            }
+        }
+        itemOptions(hasString , foodEaten);
     }
 
     //MODIFIES: this
@@ -378,10 +389,12 @@ public class ItemLog implements CalorieCounter, Loadable{
         Exercise e = new Exercise (null, null, 0);
         System.out.println("Summary: ");
         System.out.println("-FOOD-");
+        System.out.printf("%-5s %-20s %-5s %-5s \n", "ID", "Name", "KCals", "Healthy?");
         for (Item i : foodList.getDone()){
             System.out.println(f.summary(i));
         }
         System.out.println("-EXERCISE-");
+        System.out.printf("%-5s %-20s %-5s \n", "ID", "Name", "KCals");
         for (Item i : exList.getDone()){
             System.out.println(e.summary(i));
         }

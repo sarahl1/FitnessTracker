@@ -5,9 +5,14 @@ import java.util.HashMap;
 
 public abstract class ItemList {
     private HashMap<Item, ArrayList<String>> log;
+    private ItemLog il;
 
     public ItemList(){
         log = new HashMap<>();
+    }
+
+    public void setLog(HashMap<Item, ArrayList<String>> map){
+        log = map;
     }
 
     public HashMap<Item, ArrayList<String>> getLog(){

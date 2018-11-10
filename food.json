@@ -1,8 +1,5 @@
-﻿{
-	"Food_Display_Table": {
-		"Food_Display_Row": [
-			{
-				"Food_Code": "12350000",
+﻿{"Food_Display_Row": [
+			{"Food_Code": "12350000",
 				"Display_Name": "Sour cream dip",
 				"Portion_Default": "1.00000",
 				"Portion_Amount": ".25000",
@@ -56392,4 +56389,3 @@
 			}
 		]
 	}
-}

@@ -1,6 +1,8 @@
 package model;
 
 
+import java.util.ArrayList;
+
 public class FoodList extends ItemList{
 
     //MODIFIES: this
@@ -12,7 +14,6 @@ public class FoodList extends ItemList{
             i.setList(this);
         }
     }
-
 
 
 }
