@@ -6,6 +6,7 @@ public class FoodEaten extends ItemDone{
     public void addDone(Item i){
             this.getDone().add(i);
             i.setCompleted(this);
+            notifyObservers(i);
     }
 
     public void removeDone(Item i){

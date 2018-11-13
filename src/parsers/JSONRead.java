@@ -1,4 +1,4 @@
-package model;
+package parsers;
 
 
 import java.io.FileNotFoundException;
@@ -6,6 +6,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+
+import model.Food;
+import model.FoodList;
+import model.Item;
+import model.ItemList;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -22,6 +27,7 @@ public class JSONRead {
     private boolean healthy = false;
     HashMap<Item, ArrayList<String>> result;
     private ItemList allFood;
+    private int lastID;
 
 
 
@@ -57,7 +63,7 @@ public class JSONRead {
                 String saturatedFats = (String) item.get("Saturated_Fats");
                 String addedSugar = (String) item.get("Added_Sugars");
                 this.id++;
-
+                lastID = this.id;
                 if (Double.parseDouble(saturatedFats) <= 5.0 && Double.parseDouble(addedSugar) <= 60.00) {
                     healthy = true;
                 }

@@ -8,6 +8,8 @@ import model.Item;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -24,7 +26,7 @@ public class CalorieCounterTest {
 
 
     @BeforeEach
-    public void runBefore() {
+    public void runBefore() throws IOException {
         corn = new Food(corn_id, corn_name, corn_cals, false);
         food = new Food("1000", "Food", 0, true);
         food.makeItems();

@@ -38,7 +38,7 @@ public class Food extends Item {
     //EFFECTS: returns a log of il eaten for PrintWriter
     @Override
     protected String summary(Item i){
-        return String.format("%-5s %-20.19s %-7s %-5s", i.id,  i.name, (Integer.toString(i.calories)), Boolean.toString(i.getHealthy()));
+        return String.format("%-5s %-40.39s %-7s %-5s", i.id,  i.name, (Integer.toString(i.calories)), Boolean.toString(i.getHealthy()));
     }
 
 

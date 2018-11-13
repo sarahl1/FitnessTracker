@@ -1,9 +1,10 @@
-2018/11/09
+2018/11/13
 
 Exercise: 
 
 
 Food: 
+250   Flavored yogurt, whole milk              229     false
 Total calories: 0
 Calories until limit: 2500
 

@@ -1,9 +1,10 @@
 package model;
 
 import exceptions.*;
+import observer.Observer;
 
 import java.io.*;
-public abstract class Item implements Saveable{
+public abstract class Item implements Saveable {
     protected String id;
     protected String name;
     protected int calories;
@@ -43,9 +44,10 @@ public abstract class Item implements Saveable{
     public ItemDone getFoodEaten(){ return il.foodEaten;}
     public ItemDone getExerciseDone(){ return il.exerciseDone;}
 
+
     //MODIFIES: this
     //EFFECTS: instantiates Items with id, name, and calories -- then adds them to a list of all items
-    public void makeItems(){
+    public void makeItems() throws IOException {
         il.makeItems();
     }
 

@@ -1,6 +1,9 @@
 package model;
 
 import exceptions.*;
+import observer.Observer;
+import parsers.JSONRead;
+import parsers.ReadWebPage;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -14,7 +17,7 @@ import java.util.Set;
 import static java.lang.Integer.parseInt;
 import static ui.Main.options;
 
-public class ItemLog implements CalorieCounter, Loadable{
+public class ItemLog implements CalorieCounter, Loadable, Observer{
     protected ItemList allFood;
     protected ItemList allExercise;
     protected ItemDone foodEaten;
@@ -47,7 +50,9 @@ public class ItemLog implements CalorieCounter, Loadable{
 
     //MODIFIES: this
     //EFFECTS: instantiates Items with id, name, and calories -- then adds them to a list of all items
-    public void makeItems(){
+    public void makeItems() throws IOException {
+        System.out.println("Meal of the day:");
+        ReadWebPage recipe = new ReadWebPage();
         jsonReader = new JSONRead();
         foodEaten = new FoodEaten();
         exerciseDone = new ExerciseDone();
@@ -163,7 +168,7 @@ public class ItemLog implements CalorieCounter, Loadable{
     protected void printItem(ItemList allItems){
         Food f = new Food(null, null, 0, false);
         Exercise e = new Exercise (null, null, 0);
-        System.out.printf("%-5s %-20s %-7s %-5s \n", "ID", "Name", "KCals", "Healthy?");
+        System.out.printf("%-5s %-40s %-7s %-5s \n", "ID", "Name", "KCals", "Healthy?");
         Set<Item> mapItem = allItems.getLog().keySet();
         for (Item i : mapItem){
             if (i.getClass() == Food.class)
@@ -389,12 +394,12 @@ public class ItemLog implements CalorieCounter, Loadable{
         Exercise e = new Exercise (null, null, 0);
         System.out.println("Summary: ");
         System.out.println("-FOOD-");
-        System.out.printf("%-5s %-20s %-5s %-5s \n", "ID", "Name", "KCals", "Healthy?");
+        System.out.printf("%-5s %-40s %-7s %-5s \n", "ID", "Name", "KCals", "Healthy?");
         for (Item i : foodList.getDone()){
             System.out.println(f.summary(i));
         }
         System.out.println("-EXERCISE-");
-        System.out.printf("%-5s %-20s %-5s \n", "ID", "Name", "KCals");
+        System.out.printf("%-5s %-40s %-7s \n", "ID", "Name", "KCals");
         for (Item i : exList.getDone()){
             System.out.println(e.summary(i));
         }
@@ -460,4 +465,9 @@ public class ItemLog implements CalorieCounter, Loadable{
         }
     }
 
+    @Override
+    public void update(Item i) {
+        System.out.println("You have added " + i.getName());
+    }
 }
+

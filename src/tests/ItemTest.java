@@ -5,6 +5,8 @@ import model.ItemLog;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ItemTest {
@@ -20,7 +22,7 @@ public class ItemTest {
 
 
     @BeforeEach
-    public void runBefore() {
+    public void runBefore() throws IOException {
         corn = new Food(corn_id, corn_name, corn_cals, false);
         il = new ItemLog();
         il.makeItems();
