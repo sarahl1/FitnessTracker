@@ -1,10 +1,10 @@
-2018/11/13
+2018/11/15
 
 Exercise: 
 
 
 Food: 
-250   Flavored yogurt, whole milk              229     false
+1249  Fried pork chop (eat lean only)          153     true 
 Total calories: 0
 Calories until limit: 2500
 

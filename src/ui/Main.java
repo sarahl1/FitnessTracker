@@ -8,6 +8,8 @@ import org.json.simple.parser.ParseException;
 import java.io.IOException;
 import java.util.Scanner;
 
+import static ui.MainMenu.run;
+
 
 public class Main {
     protected static Scanner scan = new Scanner(System.in);
@@ -24,6 +26,7 @@ public class Main {
         i = new Food(null, null, 0, false);
         n = new Nutrition();
         i.makeItems();
+        run(i.il);
         try {
             options();
         } catch (InputException e1) {

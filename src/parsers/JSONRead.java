@@ -7,10 +7,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 
-import model.Food;
-import model.FoodList;
-import model.Item;
-import model.ItemList;
+import model.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -51,17 +48,38 @@ public class JSONRead {
         }
     }
 
+    //TODO: Add nutritional facts!!!!!
+
         private void setAllFood(JSONArray array){
             allFood = new FoodList();
             result = new HashMap<>();
             for (Object o : array) {
                 JSONObject item = (JSONObject) o;
 
+                Nutrition nutrition = new Nutrition();
                 String name = (String) item.get("Display_Name");
                 String id = Integer.toString(this.id);
                 String calories = (String) item.get("Calories");//parse
                 String saturatedFats = (String) item.get("Saturated_Fats");
                 String addedSugar = (String) item.get("Added_Sugars");
+                String portionAmount = (String) item.get("Portion_Amount");
+                String portionDisplayName = (String) item.get("Portion_Display_Name");
+                String grains = (String) item.get("Grains"); //ounces
+                String wholeGrains = (String) item.get("Whole_Grains");
+                String vegetables = (String) item.get("Vegetables"); //cups
+                String orangeVegetables = (String) item.get("Orange_Vegetables"); //cups
+                String drkgreenVegetables = (String) item.get("Drkgreen_Vegetables"); //cups
+                String starchyVegetables = (String) item.get("Starchy_vegetables"); //cups
+                String otherVegetables = (String) item.get("Other_Vegetables"); //cups
+                String fruits = (String) item.get("Fruits"); //cups
+                String milk = (String) item.get("Milk"); //cup
+                String meats = (String) item.get("Meats"); //ounces
+                String soy = (String) item.get("Soy"); //ounces
+                String drybeans_peas = (String) item.get("Drybeans_Peas"); //cups
+                String oils = (String) item.get("Oils"); //grams
+                String solid_fats = (String) item.get("Solid_Fats"); //grams
+
+
                 this.id++;
                 lastID = this.id;
                 if (Double.parseDouble(saturatedFats) <= 5.0 && Double.parseDouble(addedSugar) <= 60.00) {
@@ -70,6 +88,7 @@ public class JSONRead {
 
                 Item newItem = new Food(id, name,
                         parseInt(String.valueOf(Math.round(Double.parseDouble(calories)))), healthy);
+                newItem.setNutriFacts(nutrition);
                 result.put(newItem, null);
 
                 healthy = false;

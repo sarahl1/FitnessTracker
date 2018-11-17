@@ -4,6 +4,7 @@ import exceptions.*;
 import observer.Observer;
 import parsers.JSONRead;
 import parsers.ReadWebPage;
+import ui.MainMenu;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -17,7 +18,7 @@ import java.util.Set;
 import static java.lang.Integer.parseInt;
 import static ui.Main.options;
 
-public class ItemLog implements CalorieCounter, Loadable, Observer{
+public class ItemLog implements CalorieCounter, Loadable{
     protected ItemList allFood;
     protected ItemList allExercise;
     protected ItemDone foodEaten;
@@ -35,6 +36,7 @@ public class ItemLog implements CalorieCounter, Loadable, Observer{
     public ItemLog(){
         allFood = new FoodList();
         allExercise = new ExerciseList();
+        //MainMenu.update(total);
     }
 
     //EFFECTS: getters
@@ -77,7 +79,7 @@ public class ItemLog implements CalorieCounter, Loadable, Observer{
         allFood = jsonReader.getAllFood();
 
     }
-//TODO: write new item to JSON
+//TODO: write new item to JSON!!!!!!!!!!!
     //MODIFIES: this
     //EFFECTS: gives add item options and takes user input
     //         throws NotAnOptionException if user enters an invalid input
@@ -465,9 +467,6 @@ public class ItemLog implements CalorieCounter, Loadable, Observer{
         }
     }
 
-    @Override
-    public void update(Item i) {
-        System.out.println("You have added " + i.getName());
-    }
+
 }
 
