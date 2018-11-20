@@ -1,10 +1,9 @@
-2018/11/15
+2018/11/19
 
 Exercise: 
 
 
 Food: 
-1249  Fried pork chop (eat lean only)          153     true 
 Total calories: 0
 Calories until limit: 2500
 

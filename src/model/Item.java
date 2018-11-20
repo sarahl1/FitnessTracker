@@ -4,6 +4,8 @@ import exceptions.*;
 import observer.Observer;
 
 import java.io.*;
+import java.util.Objects;
+
 public abstract class Item implements Saveable {
     protected String id;
     protected String name;
@@ -106,6 +108,16 @@ public abstract class Item implements Saveable {
         writer.close();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Item item = (Item) o;
+        return Objects.equals(id, item.id);
+    }
 
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

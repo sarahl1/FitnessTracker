@@ -2,13 +2,10 @@ package ui;
 
 import exceptions.*;
 import model.*;
-import org.json.JSONException;
-import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.util.Scanner;
 
-import static ui.MainMenu.run;
 
 
 public class Main {
@@ -17,6 +14,7 @@ public class Main {
     private static Item e;
     private static Item i;
     private static Nutrition n;
+    private static MainMenu mm;
 
 
 
@@ -24,9 +22,11 @@ public class Main {
         f = new Food(null, null, 0, false);
         e = new Exercise(null, null, 0);
         i = new Food(null, null, 0, false);
+        mm = new MainMenu();
         n = new Nutrition();
         i.makeItems();
-        run(i.il);
+        mm.setItemLog(i.il);
+        mm.run(args);
         try {
             options();
         } catch (InputException e1) {

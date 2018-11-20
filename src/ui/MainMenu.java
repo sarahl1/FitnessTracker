@@ -6,44 +6,49 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import model.ItemLog;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.Scanner;
+
 public class MainMenu extends Application {
-    Button b1, b2, b3, b4, b5;
     Stage window;
     Scene scene;
     static int totalCals;
     static ItemLog itemLog;
+    static Label titleCals;
 
-    public static void run(ItemLog il){
-        launch();
-        totalCals = il.getTotal();
-        itemLog = il;
+    public void setItemLog(ItemLog il){
+        this.itemLog = il;
+    }
+
+    public void run(String[] args){
+        launch(args);
     }
 
     public static void update(ItemLog il){
         totalCals = il.getTotal();
+        titleCals.setText(Integer.toString(totalCals));
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage){
         window = primaryStage;
         window.setTitle("Calorie Counter");
-
         BorderPane mainUI = new BorderPane();
         mainUI.setPadding(new Insets(10,10,10,10));
 
         VBox top = new VBox(10);
         top.setAlignment(Pos.CENTER);
         Label titleString = new Label("Welcome to your calorie counter!");
-        Label titleCals = new Label("Calories logged: " + totalCals);
+        titleCals = new Label("Calories logged: " + totalCals);
         top.getChildren().addAll(titleString, titleCals);
 
-        VBox leftMenu = new VBox(10);
+        VBox leftMenu = new VBox(15);
         leftMenu.setPadding(new Insets(10,10,10,10));
 
         Button addButton = new Button("Add");
@@ -51,11 +56,11 @@ public class MainMenu extends Application {
         Button viewButton = new Button("View Previous");
         Button setButton = new Button("Resume Previous");
         Button exitButton = new Button("Exit");
-        addButton.setMinWidth(15);
-        removeButton.setMinWidth(15);
-        viewButton.setMinWidth(15);
-        setButton.setMinWidth(15);
-        exitButton.setMinWidth(15);
+        addButton.setPadding(new Insets(5, 5, 5, 5));
+        removeButton.setPadding(new Insets(5, 5, 5, 5));
+        viewButton.setPadding(new Insets(5, 5, 5, 5));
+        setButton.setPadding(new Insets(5, 5, 5, 5));
+        exitButton.setPadding(new Insets(5, 5, 5, 5));
         leftMenu.getChildren().addAll(addButton,removeButton,viewButton,setButton,exitButton);
 
         exitButton.setOnAction(e -> closeProgram());
@@ -63,7 +68,19 @@ public class MainMenu extends Application {
 
         mainUI.setTop(top);
         mainUI.setLeft(leftMenu);
-        scene = new Scene(mainUI, 400, 500);
+
+        Button mealButton = new Button("MEAL OF THE DAY");
+        mealButton.setMinSize(200, 200);
+        mealButton.setPadding(new Insets(20,20,10,10));
+        mealButton.setOnAction(e -> {
+            try {
+                viewMeal();
+            } catch (FileNotFoundException e1) {
+                e1.printStackTrace();
+            }
+        });
+        mainUI.setRight(mealButton);
+        scene = new Scene(mainUI, 500, 300);
 
         window.setOnCloseRequest(e -> {
             e.consume();
@@ -81,6 +98,15 @@ public class MainMenu extends Application {
     }
 
     private void showOptions() {
-        Boolean answer = AddBox.display(itemLog);
+        AddBox.display();
+    }
+
+    private void viewMeal() throws FileNotFoundException {
+        Scanner inFile = new Scanner(new FileReader("meal.txt"));
+        String sFile = "";
+
+        while(inFile.hasNextLine())
+            sFile = sFile + inFile.nextLine() + "\n";
+        MealBox.display(sFile);
     }
 }

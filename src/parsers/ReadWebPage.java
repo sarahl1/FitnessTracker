@@ -11,10 +11,12 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class ReadWebPage {
     public String inline = "";
+    public JSONArray array;
     public ReadWebPage() throws MalformedURLException, IOException {
 
 
@@ -43,7 +45,7 @@ public class ReadWebPage {
         try {
             JSONObject obj = (JSONObject) parser.parse(inline);
             JSONArray array = (JSONArray) obj.get("meals");
-            displayMeal(array);
+            saveMeal(array);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -51,7 +53,7 @@ public class ReadWebPage {
     }
 
 
-    private void displayMeal(JSONArray array) {
+    private void saveMeal(JSONArray array) throws IOException {
         for (Object o : array) {
             JSONObject item = (JSONObject) o;
             ArrayList<String> recipe = new ArrayList<>();
@@ -66,9 +68,21 @@ public class ReadWebPage {
                 recipe.add(measure + " " + ingredient);
             }
             for (String s : recipe) {
-                System.out.println(s);
+
             }
+            List<String> lines = new ArrayList<>();
+            FileWriter file = new FileWriter("meal.txt", false);
+            PrintWriter writeToInput = new PrintWriter(file);
+            lines.add("Meal of the day: ");
+            for (String s : recipe) {
+                lines.add(s);
+            }
+            for (String line : lines) {
+                writeToInput.println(line);
+            }
+            writeToInput.close();
         }
+
     }
 
 

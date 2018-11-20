@@ -34,8 +34,7 @@ public class ItemLog implements CalorieCounter, Loadable{
     protected int MAX_TOTAL = 2500;
 
     public ItemLog(){
-        allFood = new FoodList();
-        allExercise = new ExerciseList();
+
         //MainMenu.update(total);
     }
 
@@ -53,7 +52,8 @@ public class ItemLog implements CalorieCounter, Loadable{
     //MODIFIES: this
     //EFFECTS: instantiates Items with id, name, and calories -- then adds them to a list of all items
     public void makeItems() throws IOException {
-        System.out.println("Meal of the day:");
+        allFood = new FoodList();
+        allExercise = new ExerciseList();
         ReadWebPage recipe = new ReadWebPage();
         jsonReader = new JSONRead();
         foodEaten = new FoodEaten();
@@ -190,14 +190,15 @@ public class ItemLog implements CalorieCounter, Loadable{
 
     //EFFECTS: searches allFood for the food name matching input,
     //         throws NotAnItemException if item is not found
-    private void search(String input) throws NotAnItemException {
+    public ItemList search(String input) throws NotAnItemException {
         ItemList hasString = new FoodList();
         for (Item i : allFood.getLog().keySet()){
             if (i.name.toLowerCase().contains(input.toLowerCase())){
                 hasString.addItem(i);
             }
         }
-        itemOptions(hasString , foodEaten);
+        //itemOptions(hasString , foodEaten);
+        return hasString;
     }
 
     //MODIFIES: this

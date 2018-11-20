@@ -19,7 +19,7 @@ public abstract class ItemDone extends Subject{
         return this.done;
     }
 
-    abstract protected void addDone(Item i);
+    abstract public void addDone(Item i);
 
-    abstract protected void removeDone(Item i);
+    abstract public void removeDone(Item i);
 }
