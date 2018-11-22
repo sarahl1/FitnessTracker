@@ -6,8 +6,14 @@ public class ItemDoneMonitor implements Observer{
     private int numItems = 0;
 
     @Override
-    public void update(Item i) {
+    public String update(Item i) {
         numItems++;
-        System.out.println("You have added " + i.getName() + ". \n There are " + numItems + " item(s) logged today.");
+        return ("You have added " + i.getName() + ". \n There are " + numItems + " item(s) logged today.");
+    }
+
+    @Override
+    public String updateRemove(Item i) {
+        numItems--;
+        return("You have removed " + i.getName() + ". \n There are " + numItems + "item(s) logged today.");
     }
 }

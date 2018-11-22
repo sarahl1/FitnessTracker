@@ -111,7 +111,7 @@ public class ItemLog implements CalorieCounter, Loadable{
         printLog(foodEaten, exerciseDone);
         scanRemove();
         createRemoveList();
-        removeItem(toRemove, foodEaten, exerciseDone, listToRemove);
+        //removeItem(toRemove, foodEaten, exerciseDone, listToRemove);
         if (!found){
             throw new NotAnItemException("Not an item!");
         }
@@ -200,6 +200,7 @@ public class ItemLog implements CalorieCounter, Loadable{
         //itemOptions(hasString , foodEaten);
         return hasString;
     }
+
 
     //MODIFIES: this
     //EFFECTS: adds il to testFood -- adds calories of the il to total
@@ -299,13 +300,21 @@ public class ItemLog implements CalorieCounter, Loadable{
 
     //MODIFIES: this
     //EFFECTS: takes user input and adds the il with input id to listToRemove
-    public void removeItem(String toRemove, ItemDone fooddone, ItemDone exdone, ArrayList<Item> remove){
-        found = false;
-        helpRemove(toRemove, fooddone, remove);
-
-        helpRemove(toRemove, exdone, remove);
-
-        removeFromRemove(fooddone, exdone);
+    public void removeItem(ItemDone list, Item i){
+//        found = false;
+//        helpRemove(toRemove, fooddone, remove);
+//
+//        helpRemove(toRemove, exdone, remove);
+//
+//        removeFromRemove(fooddone, exdone);
+        list.removeDone(i);
+        try {
+            removeCal(i);
+        } catch (HighTotalException e) {
+            System.out.println(e.getMessage());
+        } catch (LowTotalException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private void helpRemove(String toRemove, ItemDone done, ArrayList<Item> remove){

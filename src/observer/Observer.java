@@ -3,5 +3,6 @@ package observer;
 import model.Item;
 
 public interface Observer {
-    void update(Item i);
+    String update(Item i);
+    String updateRemove(Item i);
 }

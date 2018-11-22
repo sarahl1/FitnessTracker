@@ -1,28 +1,27 @@
 package ui;
 
-import com.sun.tools.javac.comp.Enter;
 import exceptions.NotAnItemException;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.*;
 import javafx.scene.Scene;
 
 import java.util.Set;
 
+import static java.lang.Integer.parseInt;
+
 public class AddBox extends MainMenu {
+    static Item foundItem;
 
     public static void display() {
         Stage window = new Stage();
-//        window.initModality(Modality.APPLICATION_MODAL);
+        window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle("Add");
 
         GridPane grid = new GridPane();
@@ -53,15 +52,25 @@ public class AddBox extends MainMenu {
         grid.getChildren().addAll(exercise, exerciseButton, food, foodButton,
                 nutrition, nutritionButton, create, createButton);
 
-        exerciseButton.setOnAction(e -> displayExerciseChoices());
+        if (foundItem != null) {
+            Label notify = new Label(observer.update(foundItem));
+            GridPane.setConstraints(notify, 0, 4);
+            grid.getChildren().add(notify);
+        }
+
+        exerciseButton.setOnAction(e -> {
+            displayExerciseChoices();
+            window.close();
+        });
         foodButton.setOnAction(e -> {
             try {
                 displayFoodChoices();
+                window.close();
             } catch (NotAnItemException e1) {
                 e1.printStackTrace();
             }
         });
-        Scene scene = new Scene(grid, 250, 200);
+        Scene scene = new Scene(grid, 400, 200);
 
         window.setScene(scene);
         window.show();
@@ -70,7 +79,7 @@ public class AddBox extends MainMenu {
     private static void displayFoodChoices() throws NotAnItemException {
         Stage window = new Stage();
         window.setTitle("Add Food");
-        VBox layout = new VBox();
+        VBox layout = new VBox(10);
         layout.setPadding(new Insets(20, 20, 20, 20));
 
         TextField foodField = new TextField();
@@ -88,11 +97,12 @@ public class AddBox extends MainMenu {
             }
         });
         ChoiceBox<String> foodChoices = new ChoiceBox<>();
+        foodChoices.setValue("Search Results");
         foodChoices.setMaxHeight(200);
         submit.setOnAction(f -> {
             try {
                 for (Item i : itemLog.search(foodField.getText()).getLog().keySet()) {
-                    foodChoices.getItems().add(i.getName() + "- " + i.getCalories() + " cals");
+                    foodChoices.getItems().addAll(i.getName() + "- " + i.getCalories() + " cals");
                 }
             } catch (NotAnItemException e1) {
                 e1.printStackTrace();
@@ -104,8 +114,10 @@ public class AddBox extends MainMenu {
         confirm.setOnAction(
                 e -> {
                     getChoice(foodChoices, itemLog.getAllFood().getLog().keySet(), itemLog.getFoodEaten());
+                    display();
                     window.close();
                 });
+
 
         layout.getChildren().addAll(foodField, submit, foodChoices, confirm);
         Scene exerciseScene = new Scene(layout, 250, 200);
@@ -121,13 +133,14 @@ public class AddBox extends MainMenu {
         layout.setPadding(new Insets(20, 20, 20, 20));
         ChoiceBox<String> exerciseChoices = new ChoiceBox<>();
         for (Item e : itemLog.getAllExercise().getLog().keySet()) {
-            exerciseChoices.getItems().add(e.getName());
+            exerciseChoices.getItems().add(e.getName() + "- " + -(e.getCalories()) + " cals");
         }
-        exerciseChoices.setValue("Jog");
+        exerciseChoices.setValue(exerciseChoices.getItems().get(0));
         Button confirm = new Button("Add");
         confirm.setOnAction(
                 e -> {
                     getChoice(exerciseChoices, itemLog.getAllExercise().getLog().keySet(), itemLog.getExerciseDone());
+                    display();
                     window.close();
                 });
         layout.getChildren().addAll(exerciseChoices, confirm);
@@ -138,13 +151,16 @@ public class AddBox extends MainMenu {
     }
 
     private static void getChoice(ChoiceBox<String> choiceBox, Set<Item> set, ItemDone id) {
-        String item = choiceBox.getValue();
-        item = item.split("-")[0];
+        String original = choiceBox.getValue();
+        String item = original.split("-")[0];
+        String cals = original.split("- ")[1];
+        String calsFinal = cals.split(" cals")[0];
         boolean found = false;
         for (Item i : set) {
-            if (i.getName().equals(item) && found==false) {
+            if (i.getName().equals(item) && i.getCalories() == parseInt(calsFinal) && found == false) {
                 itemLog.addItem(i, id);
                 update(itemLog);
+                foundItem = i;
                 found = true;
             }
         }

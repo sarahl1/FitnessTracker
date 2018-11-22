@@ -14,8 +14,13 @@ public class Subject {
             observers.add(observer);
     }
 
-    public void notifyObservers(Item item){
-        for (Observer o : observers)
-            o.update(item);
+    public void notifyObservers(Item item, String action){
+        if (action == "add") {
+            for (Observer o : observers)
+                o.update(item);
+        } else if (action == "remove") {
+            for (Observer o : observers)
+                o.updateRemove(item);
+        }
     }
 }

@@ -10,6 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import model.ItemLog;
+import observer.ItemDoneMonitor;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -21,12 +22,14 @@ public class MainMenu extends Application {
     static int totalCals;
     static ItemLog itemLog;
     static Label titleCals;
+    static ItemDoneMonitor observer;
 
     public void setItemLog(ItemLog il){
         this.itemLog = il;
     }
 
     public void run(String[] args){
+        observer = new ItemDoneMonitor();
         launch(args);
     }
 
@@ -64,7 +67,8 @@ public class MainMenu extends Application {
         leftMenu.getChildren().addAll(addButton,removeButton,viewButton,setButton,exitButton);
 
         exitButton.setOnAction(e -> closeProgram());
-        addButton.setOnAction(e -> showOptions());
+        addButton.setOnAction(e -> addOptions());
+        removeButton.setOnAction(e -> removeOptions());
 
         mainUI.setTop(top);
         mainUI.setLeft(leftMenu);
@@ -97,7 +101,9 @@ public class MainMenu extends Application {
             window.close();
     }
 
-    private void showOptions() {
+    private void removeOptions() { RemoveBox.display(); }
+
+    private void addOptions() {
         AddBox.display();
     }
 
