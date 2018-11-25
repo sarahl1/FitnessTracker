@@ -8,7 +8,7 @@ import java.util.HashSet;
 
 public interface Loadable {
 
-    void viewPrevious() throws IOException, NoPreviousException;
+    String viewPrevious() throws IOException, NoPreviousException;
 
     void setTotal() throws IOException, NoPreviousException;
 

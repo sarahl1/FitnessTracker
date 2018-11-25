@@ -123,6 +123,7 @@ public class MainMenu extends Application {
         addButton.setOnAction(e -> addOptions());
         removeButton.setOnAction(e -> removeOptions());
         setButton.setOnAction(e -> resumeLog());
+        viewButton.setOnAction(e -> previousLog());
 
         mainUI.setTop(top);
         mainUI.setLeft(leftMenu);
@@ -184,7 +185,7 @@ public class MainMenu extends Application {
     private void removeOptions() { RemoveBox.display(); }
 
     private void addOptions() {
-        display();
+        AddBox.display();
     }
 
     private void viewMeal() throws FileNotFoundException {
@@ -221,4 +222,6 @@ public class MainMenu extends Application {
         } catch (NoPreviousException e) {
         } finally { window.show();}
     }
+
+    private void previousLog(){ PreviousBox.display(); }
 }

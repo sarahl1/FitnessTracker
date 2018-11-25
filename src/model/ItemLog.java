@@ -58,13 +58,13 @@ public class ItemLog implements CalorieCounter, Loadable{
         exerciseDone = new ExerciseDone();
         Item jog = new Exercise("0011", "Jog", -100);
         Item run = new Exercise("0021", "Run", -120);
-        Item swim = new Exercise("1001", "Swim", -300);
-        Item cardio1 = new Exercise("1002", "Cardio (20 mins)", -100);
-        Item strength1 = new Exercise("1002", "Strength Training", -100);
-        Item basketball = new Exercise("1011", "Basketball", -100);
-        Item hockey = new Exercise("1021", "Hockey", -200);
-        Item pilates = new Exercise("1031", "Pilates", -180);
-        Item yoga = new Exercise("1041", "Yoga", -180);
+        Item swim = new Exercise("0001", "Swim", -300);
+        Item cardio1 = new Exercise("0002", "Cardio (20 mins)", -100);
+        Item strength1 = new Exercise("0012", "Strength Training", -100);
+        Item basketball = new Exercise("0031", "Basketball", -100);
+        Item hockey = new Exercise("0041", "Hockey", -200);
+        Item pilates = new Exercise("0051", "Pilates", -180);
+        Item yoga = new Exercise("0061", "Yoga", -180);
         cardio1.setList(allExercise);
         strength1.setList(allExercise);
         jog.setList(allExercise);
@@ -426,7 +426,7 @@ public class ItemLog implements CalorieCounter, Loadable{
     //REQUIRES: there exists a previous log
     //EFFECTS: prints the previous log
     @Override
-    public void viewPrevious() throws IOException, NoPreviousException {
+    public String viewPrevious() throws IOException, NoPreviousException {
         Scanner inFile = new Scanner(new FileReader("inputfile.txt"));
         String sFile = "";
 
@@ -437,9 +437,7 @@ public class ItemLog implements CalorieCounter, Loadable{
         while(inFile.hasNextLine())
             sFile = sFile + inFile.nextLine() + "\n";
 
-        // prints to console
-        System.out.println("Previous Log: ");
-        System.out.println(sFile);
+        return sFile;
     }
 
     //MODIFIES: this

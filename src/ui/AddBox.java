@@ -1,7 +1,5 @@
 package ui;
 
-import exceptions.HighTotalException;
-import exceptions.LowTotalException;
 import exceptions.NotAnItemException;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;

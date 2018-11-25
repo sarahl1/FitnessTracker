@@ -4,5 +4,4 @@ Exercise:
 
 
 Food: 
-2040  Pancakes                                 60      true 
 
