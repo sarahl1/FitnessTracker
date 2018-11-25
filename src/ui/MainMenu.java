@@ -1,5 +1,6 @@
 package ui;
 
+import exceptions.NoPreviousException;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -23,10 +24,13 @@ import observer.ItemDoneMonitor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 
+import static ui.AddBox.display;
+
 public class MainMenu extends Application {
-    static Stage window;
+    public static Stage window;
     Scene scene;
     static int totalCals;
     static ItemLog itemLog;
@@ -35,7 +39,7 @@ public class MainMenu extends Application {
     static Label notify;
     static ListView<String> listviewF;
     static ListView<String> listviewE;
-    static Label exception;
+    public static Label exception;
 
 
     public void setItemLog(ItemLog il){
@@ -101,7 +105,7 @@ public class MainMenu extends Application {
         titleCals = new Label("Calories logged: " + totalCals);
         top.getChildren().addAll(topBox, titleCals);
         VBox leftMenu = new VBox(15);
-        leftMenu.setPadding(new Insets(10,10,10,10));
+        leftMenu.setPadding(new Insets(10,10,10,5));
 
         Button addButton = new Button("Add");
         Button removeButton = new Button("Remove");
@@ -118,6 +122,7 @@ public class MainMenu extends Application {
         exitButton.setOnAction(e -> closeProgram());
         addButton.setOnAction(e -> addOptions());
         removeButton.setOnAction(e -> removeOptions());
+        setButton.setOnAction(e -> resumeLog());
 
         mainUI.setTop(top);
         mainUI.setLeft(leftMenu);
@@ -125,6 +130,7 @@ public class MainMenu extends Application {
         Button mealButton = new Button("MEAL OF THE DAY");
         mealButton.setMinSize(200, 200);
         mealButton.setPadding(new Insets(10,10,10,10));
+        mealButton.setAlignment(Pos.CENTER);
         mealButton.setOnAction(e -> {
             try {
                 viewMeal();
@@ -155,6 +161,7 @@ public class MainMenu extends Application {
         listBorderE.getChildren().add(listviewE);
 
         exception = new Label();
+        exception.setPadding(new Insets(2, 20, 15,20));
         VBox layout = new VBox();
         layout.getChildren().addAll(mainUI, exception, food, listBorderF, exercise, listBorderE);
         scene = new Scene(layout, 550, 650);
@@ -177,7 +184,7 @@ public class MainMenu extends Application {
     private void removeOptions() { RemoveBox.display(); }
 
     private void addOptions() {
-        AddBox.display();
+        display();
     }
 
     private void viewMeal() throws FileNotFoundException {
@@ -205,5 +212,13 @@ public class MainMenu extends Application {
             listviewE.getItems().remove(i.summary(i));
 
         window.show();
+    }
+
+    public static void resumeLog(){
+        try {
+            itemLog.optionResume();
+        } catch (IOException e) {
+        } catch (NoPreviousException e) {
+        } finally { window.show();}
     }
 }

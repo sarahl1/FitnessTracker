@@ -27,11 +27,11 @@ public class Main {
         i.makeItems();
         mm.setItemLog(i.il);
         mm.run(args);
-        try {
-            options();
-        } catch (InputException e1) {
-            System.out.println(e1.getMessage());
-        }
+//        try {
+//            options();
+//        } catch (InputException e1) {
+//            System.out.println(e1.getMessage());
+//        }
         e.saveToInput(i.getExerciseDone());
         f.saveToInput(i.getFoodEaten());
         e.saveToPrevious(i.getExerciseDone());

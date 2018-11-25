@@ -104,7 +104,7 @@ public abstract class Item implements Saveable {
     public void saveToPreviousTotal() throws IOException{
         FileWriter fw = new FileWriter("previousTOTAL.txt", false);
         PrintWriter writer = new PrintWriter(fw);
-        writer.println(Double.toString(getTotal()));
+        writer.println(Integer.toString(getTotal()));
         writer.close();
     }
 

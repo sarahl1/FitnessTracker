@@ -4,8 +4,5 @@ Exercise:
 
 
 Food: 
-1323  Battered fried chicken breast            365     true 
-305   Grilled pork chop (eat lean only)        175     true 
-Total calories: 0
-Calories until limit: 2500
+2040  Pancakes                                 60      true 
 

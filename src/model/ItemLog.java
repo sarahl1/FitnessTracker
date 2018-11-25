@@ -34,8 +34,6 @@ public class ItemLog implements CalorieCounter, Loadable{
     protected int MAX_TOTAL = 2500;
 
     public ItemLog(){
-
-        //MainMenu.update(total);
     }
 
     //EFFECTS: getters
@@ -128,10 +126,9 @@ public class ItemLog implements CalorieCounter, Loadable{
     //MODIFIES: this
     //EFFECTS: resumes previous log and prints log
     public void optionResume() throws IOException, NoPreviousException {
+        setTotal();
         setDone(allExercise, exerciseDone);
         setDone(allFood, foodEaten);
-        setTotal();
-        printLog(foodEaten, exerciseDone);
     }
 
     //EFFECTS: prints log
@@ -209,9 +206,11 @@ public class ItemLog implements CalorieCounter, Loadable{
         try {
             addCal(f);
         } catch (HighTotalException e) {
-            System.out.println(e.getMessage());
+            MainMenu.exception.setText(e.getMessage());
+            MainMenu.window.show();
         } catch (LowTotalException e) {
-            System.out.println(e.getMessage());
+            MainMenu.exception.setText(e.getMessage());
+            MainMenu.window.show();
         }
     }
 
@@ -311,9 +310,11 @@ public class ItemLog implements CalorieCounter, Loadable{
         try {
             removeCal(i);
         } catch (HighTotalException e) {
-            System.out.println(e.getMessage());
+            MainMenu.exception.setText(e.getMessage());
+            MainMenu.window.show();
         } catch (LowTotalException e) {
-            System.out.println(e.getMessage());
+            MainMenu.exception.setText(e.getMessage());
+            MainMenu.window.show();
         }
     }
 
@@ -343,6 +344,7 @@ public class ItemLog implements CalorieCounter, Loadable{
                 this.removeCal(f);
             } catch (LowTotalException e) {
                 System.out.println(e.getMessage());
+
             } catch (HighTotalException e) {
                 System.out.println(e.getMessage());
             }
@@ -473,6 +475,7 @@ public class ItemLog implements CalorieCounter, Loadable{
             for (Item f : itemMap) {
                 if (line.equals(f.getId())) {
                     done.addDone(f);
+                    MainMenu.updateAdd(this , f);
                 }
 
             }
