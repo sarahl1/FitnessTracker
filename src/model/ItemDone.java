@@ -4,8 +4,8 @@ import observer.ItemDoneMonitor;
 import observer.Observer;
 import observer.Subject;
 
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 
 public abstract class ItemDone extends Subject{
     private HashSet<Item> done;
@@ -23,4 +23,6 @@ public abstract class ItemDone extends Subject{
     abstract public void addDone(Item i);
 
     abstract public void removeDone(Item i);
+
+
 }

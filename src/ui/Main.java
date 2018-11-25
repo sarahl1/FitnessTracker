@@ -54,6 +54,10 @@ public class Main {
                     i.optionAdd();
                 } catch (InputException e1) {
                     System.out.println(e1.getMessage());
+                } catch (HighTotalException e1) {
+                    e1.printStackTrace();
+                } catch (LowTotalException e1) {
+                    e1.printStackTrace();
                 } finally {
                     options();
                 }

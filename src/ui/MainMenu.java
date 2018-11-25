@@ -5,37 +5,62 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
+import model.Exercise;
+import model.Food;
+import model.Item;
 import model.ItemLog;
 import observer.ItemDoneMonitor;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Scanner;
 
 public class MainMenu extends Application {
-    Stage window;
+    static Stage window;
     Scene scene;
     static int totalCals;
     static ItemLog itemLog;
     static Label titleCals;
     static ItemDoneMonitor observer;
+    static Label notify;
+    static ListView<String> listviewF;
+    static ListView<String> listviewE;
+    static Label exception;
+
 
     public void setItemLog(ItemLog il){
         this.itemLog = il;
     }
 
+    public MainMenu(){
+        this.observer = new ItemDoneMonitor();
+    }
+
     public void run(String[] args){
-        observer = new ItemDoneMonitor();
         launch(args);
     }
 
-    public static void update(ItemLog il){
+    public static void updateRemove(ItemLog il, Item i){
         totalCals = il.getTotal();
-        titleCals.setText(Integer.toString(totalCals));
+        titleCals.setText("Calories Logged: " + Integer.toString(totalCals));
+        notify.setText(observer.updateRemove(i));
+        viewListRemove(i);
+    }
+    public static void updateAdd(ItemLog il, Item i){
+        totalCals = il.getTotal();
+        titleCals.setText("Calories Logged: " + Integer.toString(totalCals));
+        notify.setText(observer.update(i));
+        viewList(i);
     }
 
     @Override
@@ -43,14 +68,38 @@ public class MainMenu extends Application {
         window = primaryStage;
         window.setTitle("Calorie Counter");
         BorderPane mainUI = new BorderPane();
-        mainUI.setPadding(new Insets(10,10,10,10));
+        mainUI.setPadding(new Insets(20,20,20,20));
 
         VBox top = new VBox(10);
         top.setAlignment(Pos.CENTER);
-        Label titleString = new Label("Welcome to your calorie counter!");
-        titleCals = new Label("Calories logged: " + totalCals);
-        top.getChildren().addAll(titleString, titleCals);
 
+        Label titleString = new Label("Welcome to your calorie counter!");
+        ImageView catBurger = new ImageView();
+        catBurger.setPreserveRatio(true);
+        catBurger.setFitHeight(50);
+        try {
+            Image image = new Image(new FileInputStream("burger.gif"));
+            catBurger.setImage(image);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        ImageView catBurger1 = new ImageView();
+        catBurger1.setPreserveRatio(true);
+        catBurger1.setFitHeight(50);
+        try {
+            Image image = new Image(new FileInputStream("burger.gif"));
+            catBurger1.setImage(image);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        HBox topBox = new HBox(10);
+        topBox.getChildren().addAll(catBurger, titleString, catBurger1);
+        topBox.setAlignment(Pos.CENTER);
+
+        titleCals = new Label("Calories logged: " + totalCals);
+        top.getChildren().addAll(topBox, titleCals);
         VBox leftMenu = new VBox(15);
         leftMenu.setPadding(new Insets(10,10,10,10));
 
@@ -75,7 +124,7 @@ public class MainMenu extends Application {
 
         Button mealButton = new Button("MEAL OF THE DAY");
         mealButton.setMinSize(200, 200);
-        mealButton.setPadding(new Insets(20,20,10,10));
+        mealButton.setPadding(new Insets(10,10,10,10));
         mealButton.setOnAction(e -> {
             try {
                 viewMeal();
@@ -83,8 +132,32 @@ public class MainMenu extends Application {
                 e1.printStackTrace();
             }
         });
+
         mainUI.setRight(mealButton);
-        scene = new Scene(mainUI, 500, 300);
+
+        notify = new Label();
+        mainUI.setBottom(notify);
+        Label food = new Label("Food Logged:");
+        food.setPadding(new Insets(10,20,10,20));
+
+
+        listviewF = new ListView<>();
+        StackPane listBorderF = new StackPane();
+        StackPane.setMargin(listviewF, new Insets(10,20,10,20));
+        listBorderF.getChildren().add(listviewF);
+
+        Label exercise = new Label("Exercise Logged:");
+        exercise.setPadding(new Insets(10,20,10,20));
+
+        listviewE = new ListView<>();
+        StackPane listBorderE = new StackPane();
+        StackPane.setMargin(listviewE, new Insets(10,20,20,20));
+        listBorderE.getChildren().add(listviewE);
+
+        exception = new Label();
+        VBox layout = new VBox();
+        layout.getChildren().addAll(mainUI, exception, food, listBorderF, exercise, listBorderE);
+        scene = new Scene(layout, 550, 650);
 
         window.setOnCloseRequest(e -> {
             e.consume();
@@ -114,5 +187,23 @@ public class MainMenu extends Application {
         while(inFile.hasNextLine())
             sFile = sFile + inFile.nextLine() + "\n";
         MealBox.display(sFile);
+    }
+
+    public static void viewList(Item i){
+        if (i instanceof Food)
+            listviewF.getItems().add(i.summary(i));
+        if (i instanceof Exercise)
+            listviewE.getItems().add(i.summary(i));
+
+        window.show();
+    }
+
+    public static void viewListRemove(Item i){
+        if (i instanceof Food)
+            listviewF.getItems().remove(i.summary(i));
+        if (i instanceof Exercise)
+            listviewE.getItems().remove(i.summary(i));
+
+        window.show();
     }
 }

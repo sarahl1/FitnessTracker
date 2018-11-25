@@ -449,7 +449,9 @@ public class ItemLog implements CalorieCounter, Loadable{
             throw new NoPreviousException("No previous total found.");
         }
         String line = Files.readAllLines(Paths.get("previousTOTAL.txt")).get(0);
-        total += parseInt(line);
+        Double newTotal = Double.parseDouble(line);
+        int intTotal = (int) Math.round(newTotal);
+        total += intTotal;
     }
 
 

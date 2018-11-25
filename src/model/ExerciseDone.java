@@ -1,12 +1,14 @@
 package model;
 
 
-public class ExerciseDone extends ItemDone {
+import java.util.Iterator;
+
+public class ExerciseDone extends ItemDone{
 
     public void addDone(Item i){
             this.getDone().add(i);
             i.setCompleted(this);
-            notifyObservers(i, "add");
+//            notifyObservers(i, "add");
     }
 
     //MODIFIES: this
@@ -14,6 +16,7 @@ public class ExerciseDone extends ItemDone {
     public void removeDone(Item i){
             this.getDone().remove(i);
             i.setCompleted(new ExerciseDone());
-            notifyObservers(i,"remove");
+//            notifyObservers(i,"remove");
     }
+
 }

@@ -40,8 +40,8 @@ public class Exercise extends Item {
 
     //EFFECTS: returns a summary of the item with id, name, and calories
     @Override
-    protected String summary(Item i){
-        return String.format("%-5s %-40.39s %-5s", i.id,  i.name, Double.toString(i.calories));
+    public String summary(Item i){
+        return String.format("%-5s %-40.39s %-5s", i.id,  i.name, Integer.toString(i.calories));
 
     }
 

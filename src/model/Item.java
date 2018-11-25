@@ -55,7 +55,7 @@ public abstract class Item implements Saveable {
 
     //MODIFIES: this
     //EFFECTS: gives add item options and takes user input
-    public void optionAdd() throws NotAnOptionException, NotAnItemException {
+    public void optionAdd() throws NotAnOptionException, NotAnItemException, HighTotalException, LowTotalException {
         il.optionAdd();
     }
 
@@ -96,7 +96,7 @@ public abstract class Item implements Saveable {
         il.exit();}
 
     //EFFECTS: prints a summary of the item with id, name, calories, and healthy?
-    protected String summary(Item i){ return i.summary(i);};
+    public String summary(Item i){ return i.summary(i);};
 
 
     //EFFECTS: saves total to file

@@ -1,5 +1,7 @@
 package ui;
 
+import exceptions.HighTotalException;
+import exceptions.LowTotalException;
 import exceptions.NotAnItemException;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -18,6 +20,7 @@ import static java.lang.Integer.parseInt;
 
 public class AddBox extends MainMenu {
     static Item foundItem;
+    static Label exception;
 
     public static void display() {
         Stage window = new Stage();
@@ -52,11 +55,6 @@ public class AddBox extends MainMenu {
         grid.getChildren().addAll(exercise, exerciseButton, food, foodButton,
                 nutrition, nutritionButton, create, createButton);
 
-        if (foundItem != null) {
-            Label notify = new Label(observer.update(foundItem));
-            GridPane.setConstraints(notify, 0, 4);
-            grid.getChildren().add(notify);
-        }
 
         exerciseButton.setOnAction(e -> {
             displayExerciseChoices();
@@ -82,6 +80,7 @@ public class AddBox extends MainMenu {
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(20, 20, 20, 20));
 
+        exception = new Label();
         TextField foodField = new TextField();
         foodField.setPromptText("Enter keyword");
 
@@ -114,12 +113,11 @@ public class AddBox extends MainMenu {
         confirm.setOnAction(
                 e -> {
                     getChoice(foodChoices, itemLog.getAllFood().getLog().keySet(), itemLog.getFoodEaten());
-                    display();
                     window.close();
                 });
 
 
-        layout.getChildren().addAll(foodField, submit, foodChoices, confirm);
+        layout.getChildren().addAll(foodField, submit, foodChoices, confirm, exception);
         Scene exerciseScene = new Scene(layout, 250, 200);
         window.setScene(exerciseScene);
         window.show();
@@ -130,20 +128,19 @@ public class AddBox extends MainMenu {
         Stage window = new Stage();
         window.setTitle("Add Exercise");
         VBox layout = new VBox();
+        exception = new Label();
         layout.setPadding(new Insets(20, 20, 20, 20));
         ChoiceBox<String> exerciseChoices = new ChoiceBox<>();
         for (Item e : itemLog.getAllExercise().getLog().keySet()) {
-            exerciseChoices.getItems().add(e.getName() + "- " + -(e.getCalories()) + " cals");
+            exerciseChoices.getItems().add(e.getName() + "- " + (e.getCalories()) + " cals");
         }
-        exerciseChoices.setValue(exerciseChoices.getItems().get(0));
         Button confirm = new Button("Add");
         confirm.setOnAction(
                 e -> {
                     getChoice(exerciseChoices, itemLog.getAllExercise().getLog().keySet(), itemLog.getExerciseDone());
-                    display();
                     window.close();
                 });
-        layout.getChildren().addAll(exerciseChoices, confirm);
+        layout.getChildren().addAll(exerciseChoices, confirm, exception);
         Scene exerciseScene = new Scene(layout, 250, 200);
         window.setScene(exerciseScene);
         window.show();
@@ -151,19 +148,24 @@ public class AddBox extends MainMenu {
     }
 
     private static void getChoice(ChoiceBox<String> choiceBox, Set<Item> set, ItemDone id) {
-        String original = choiceBox.getValue();
-        String item = original.split("-")[0];
-        String cals = original.split("- ")[1];
-        String calsFinal = cals.split(" cals")[0];
-        boolean found = false;
-        for (Item i : set) {
-            if (i.getName().equals(item) && i.getCalories() == parseInt(calsFinal) && found == false) {
-                itemLog.addItem(i, id);
-                update(itemLog);
-                foundItem = i;
-                found = true;
+        try{ String original  = choiceBox.getValue();
+            String item = original.split("-")[0];
+            String cals = original.split("- ")[1];
+            String calsFinal = cals.split(" cals")[0];
+            boolean found = false;
+            for (Item i : set) {
+                if (i.getName().equals(item) && i.getCalories() == parseInt(calsFinal) && found == false) {
+                    itemLog.addItem(i, id);
+                    updateAdd(itemLog, i);
+                    foundItem = i;
+                    found = true;
+                }
             }
         }
+        catch (NullPointerException e){
+            exception.setText("No Item Found!");
+        }
+        display();
 
     }
 }
