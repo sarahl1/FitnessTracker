@@ -1,7 +1,9 @@
-2018/11/24
+2018/11/26
 
 Exercise: 
+0031  Basketball                               -100 
 
 
 Food: 
+1330  Battered fried chicken breast, no skin   265     true 
 

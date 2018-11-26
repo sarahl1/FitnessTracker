@@ -5,7 +5,7 @@ import model.*;
 
 import java.io.IOException;
 import java.util.Scanner;
-
+import java.util.logging.LogManager;
 
 
 public class Main {
@@ -26,12 +26,10 @@ public class Main {
         n = new Nutrition();
         i.makeItems();
         mm.setItemLog(i.il);
-        mm.run(args);
-//        try {
-//            options();
-//        } catch (InputException e1) {
-//            System.out.println(e1.getMessage());
-//        }
+        try {
+            mm.run(args);
+        } catch(RuntimeException e){
+        }
         e.saveToInput(i.getExerciseDone());
         f.saveToInput(i.getFoodEaten());
         e.saveToPrevious(i.getExerciseDone());

@@ -20,6 +20,7 @@ public class AddBox extends MainMenu {
     static Item foundItem;
     static Label exception;
 
+
     public static void display() {
         Stage window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
@@ -69,7 +70,7 @@ public class AddBox extends MainMenu {
         Scene scene = new Scene(grid, 400, 200);
 
         window.setScene(scene);
-        window.show();
+        window.showAndWait();
     }
 
     private static void displayFoodChoices() throws NotAnItemException {

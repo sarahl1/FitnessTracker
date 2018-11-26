@@ -51,7 +51,9 @@ public class MainMenu extends Application {
     }
 
     public void run(String[] args){
-        launch(args);
+        try {
+            launch(args);
+        } catch (RuntimeException e){}
     }
 
     public static void updateRemove(ItemLog il, Item i){
@@ -67,6 +69,8 @@ public class MainMenu extends Application {
         viewList(i);
     }
 
+
+
     @Override
     public void start(Stage primaryStage){
         window = primaryStage;
@@ -76,6 +80,8 @@ public class MainMenu extends Application {
 
         VBox top = new VBox(10);
         top.setAlignment(Pos.CENTER);
+
+        top.setPadding(new Insets(10,10,10,10));
 
         Label titleString = new Label("Welcome to your calorie counter!");
         ImageView catBurger = new ImageView();
@@ -104,7 +110,8 @@ public class MainMenu extends Application {
 
         titleCals = new Label("Calories logged: " + totalCals);
         top.getChildren().addAll(topBox, titleCals);
-        VBox leftMenu = new VBox(15);
+        VBox leftMenu = new VBox(10);
+        leftMenu.setMinSize(200,200);
         leftMenu.setPadding(new Insets(10,10,10,5));
 
         Button addButton = new Button("Add");
@@ -118,6 +125,7 @@ public class MainMenu extends Application {
         setButton.setPadding(new Insets(5, 5, 5, 5));
         exitButton.setPadding(new Insets(5, 5, 5, 5));
         leftMenu.getChildren().addAll(addButton,removeButton,viewButton,setButton,exitButton);
+        leftMenu.setStyle("-fx-border-color: gray");
 
         exitButton.setOnAction(e -> closeProgram());
         addButton.setOnAction(e -> addOptions());
@@ -143,6 +151,7 @@ public class MainMenu extends Application {
         mainUI.setRight(mealButton);
 
         notify = new Label();
+        notify.setPadding(new Insets(10,0,0,0));
         mainUI.setBottom(notify);
         Label food = new Label("Food Logged:");
         food.setPadding(new Insets(10,20,10,20));
@@ -182,7 +191,8 @@ public class MainMenu extends Application {
             window.close();
     }
 
-    private void removeOptions() { RemoveBox.display(); }
+    private void removeOptions() {
+        RemoveBox.display(); }
 
     private void addOptions() {
         AddBox.display();

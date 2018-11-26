@@ -43,7 +43,15 @@ public class RemoveBox extends MainMenu {
         remove.setPadding(new Insets(10, 10, 10, 10));
         remove.setOnAction(e -> {
             String selected = listView.getItems().get(listView.getSelectionModel().getSelectedIndex());
-            removeItem(selected);
+            try {
+                removeItem(selected);
+            } catch (HighTotalException e1) {
+                exception.setText(e1.getMessage());
+                window.show();
+            } catch (LowTotalException e1) {
+                exception.setText(e1.getMessage());
+                window.show();
+            }
             window.close();
         });
 
@@ -58,7 +66,7 @@ public class RemoveBox extends MainMenu {
 
     }
 
-    private static void removeItem(String selected) {
+    private static void removeItem(String selected) throws HighTotalException, LowTotalException {
         boolean found = false;
         String name = selected.split("- ")[0];
         String calories = selected.split("- ")[1];

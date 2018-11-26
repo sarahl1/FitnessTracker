@@ -67,15 +67,10 @@ public class JSONRead {
                 String grains = (String) item.get("Grains"); //ounces
                 String wholeGrains = (String) item.get("Whole_Grains");
                 String vegetables = (String) item.get("Vegetables"); //cups
-                String orangeVegetables = (String) item.get("Orange_Vegetables"); //cups
-                String drkgreenVegetables = (String) item.get("Drkgreen_Vegetables"); //cups
-                String starchyVegetables = (String) item.get("Starchy_vegetables"); //cups
-                String otherVegetables = (String) item.get("Other_Vegetables"); //cups
                 String fruits = (String) item.get("Fruits"); //cups
                 String milk = (String) item.get("Milk"); //cup
                 String meats = (String) item.get("Meats"); //ounces
                 String soy = (String) item.get("Soy"); //ounces
-                String drybeans_peas = (String) item.get("Drybeans_Peas"); //cups
                 String oils = (String) item.get("Oils"); //grams
                 String solid_fats = (String) item.get("Solid_Fats"); //grams
 
@@ -89,7 +84,9 @@ public class JSONRead {
                 Item newItem = new Food(id, name,
                         parseInt(String.valueOf(Math.round(Double.parseDouble(calories)))), healthy);
                 newItem.setNutriFacts(nutrition);
-                result.put(newItem, null);
+                if (!result.containsKey(newItem)){
+                    result.put(newItem, null);
+                }
 
                 healthy = false;
 

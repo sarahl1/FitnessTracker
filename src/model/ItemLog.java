@@ -140,28 +140,28 @@ public class ItemLog implements CalorieCounter, Loadable{
     protected void itemNutritionalOptions(ItemList food, ItemList exercise){
         printItem(food);
         printItem(exercise);
-        selectView();
+//        selectView();
     }
 
-    //EFFECTS: allows user to select item to view nutritional facts of
-    protected void selectView(){
-        System.out.println("Please enter the ID of the item which you are interested in.");
-        String num = scan.nextLine();
-        Set<Item> foodMap = allFood.getLog().keySet();
-        printNutritionHelper(foodMap, num);
-        Set<Item> exMap = allExercise.getLog().keySet();
-        printNutritionHelper(exMap, num);
-    }
+//    //EFFECTS: allows user to select item to view nutritional facts of
+//    protected void selectView(){
+//        System.out.println("Please enter the ID of the item which you are interested in.");
+//        String num = scan.nextLine();
+//        Set<Item> foodMap = allFood.getLog().keySet();
+//        printNutritionHelper(foodMap, num);
+//        Set<Item> exMap = allExercise.getLog().keySet();
+//        printNutritionHelper(exMap, num);
+//    }
 
-    //EFFECTS: sets the item's nutritional facts and prints the nutritional facts
-    private void printNutritionHelper(Set<Item> map, String num){
-        for (Item i : map){
-            if(i.id.equals(num)){
-                i.nutriFacts.setNutriFacts(i);
-                i.printNutrition();
-            }
-        }
-    }
+//    //EFFECTS: sets the item's nutritional facts and prints the nutritional facts
+//    private void printNutritionHelper(Set<Item> map, String num){
+//        for (Item i : map){
+//            if(i.id.equals(num)){
+//                i.nutriFacts.setNutriFacts(i);
+//                i.printNutrition();
+//            }
+//        }
+//    }
 
     //EFFECTS: prints a list of all il with id, name, and calories
     protected void printItem(ItemList allItems){
@@ -243,13 +243,13 @@ public class ItemLog implements CalorieCounter, Loadable{
         if (type == "food"){
             Item newItem = new Food(id, name, parseInt(cal), Boolean.parseBoolean(health));
             addItem(newItem, foodEaten);
-            newItem.nutriFacts.setNutriFacts(newItem);
+//            newItem.nutriFacts.setNutriFacts(newItem);
             newItem.list.addItem(newItem);
         }
         else if (type == "exercise"){
             Item newItem = new Exercise(id, name, parseInt(cal));
             addItem(newItem, exerciseDone);
-            newItem.nutriFacts.setNutriFacts(newItem);
+//            newItem.nutriFacts.setNutriFacts(newItem);
             newItem.list.addItem(newItem);
         }
 
