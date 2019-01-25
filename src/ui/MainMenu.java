@@ -13,6 +13,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import model.Exercise;
@@ -21,10 +23,7 @@ import model.Item;
 import model.ItemLog;
 import observer.ItemDoneMonitor;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 
 import static ui.AddBox.display;
@@ -40,6 +39,7 @@ public class MainMenu extends Application {
     static ListView<String> listviewF;
     static ListView<String> listviewE;
     public static Label exception;
+    static MediaPlayer mediaPlayer;
 
 
     public void setItemLog(ItemLog il){
@@ -114,6 +114,11 @@ public class MainMenu extends Application {
         leftMenu.setMinSize(200,200);
         leftMenu.setPadding(new Insets(10,10,10,5));
 
+        String file = ("ping.mp3");
+        Media sound = new Media(new File(file).toURI().toString());
+        mediaPlayer = new MediaPlayer(sound);
+
+
         Button addButton = new Button("Add");
         Button removeButton = new Button("Remove");
         Button viewButton = new Button("View Previous");
@@ -174,7 +179,7 @@ public class MainMenu extends Application {
         exception.setPadding(new Insets(2, 20, 15,20));
         VBox layout = new VBox();
         layout.getChildren().addAll(mainUI, exception, food, listBorderF, exercise, listBorderE);
-        scene = new Scene(layout, 550, 650);
+        scene = new Scene(layout, 550, 700);
 
         window.setOnCloseRequest(e -> {
             e.consume();

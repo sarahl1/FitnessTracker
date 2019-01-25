@@ -7,11 +7,15 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import model.*;
 import javafx.scene.Scene;
 
+import java.io.File;
 import java.util.Set;
 
 import static java.lang.Integer.parseInt;
@@ -111,6 +115,8 @@ public class AddBox extends MainMenu {
         Button confirm = new Button("Add");
         confirm.setOnAction(
                 e -> {
+                    mediaPlayer.seek(Duration.ZERO);
+                    mediaPlayer.play();
                     getChoice(foodChoices, itemLog.getAllFood().getLog().keySet(), itemLog.getFoodEaten());
                     window.close();
                 });
@@ -136,6 +142,8 @@ public class AddBox extends MainMenu {
         Button confirm = new Button("Add");
         confirm.setOnAction(
                 e -> {
+                    mediaPlayer.seek(Duration.ZERO);
+                    mediaPlayer.play();
                     getChoice(exerciseChoices, itemLog.getAllExercise().getLog().keySet(), itemLog.getExerciseDone());
                     window.close();
                 });

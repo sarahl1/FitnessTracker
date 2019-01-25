@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
+import javafx.util.Duration;
 import model.Exercise;
 import model.Food;
 import model.Item;
@@ -42,6 +43,8 @@ public class RemoveBox extends MainMenu {
         Button remove = new Button("Remove");
         remove.setPadding(new Insets(10, 10, 10, 10));
         remove.setOnAction(e -> {
+            mediaPlayer.seek(Duration.ZERO);
+            mediaPlayer.play();
             String selected = listView.getItems().get(listView.getSelectionModel().getSelectedIndex());
             try {
                 removeItem(selected);
