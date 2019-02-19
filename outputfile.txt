@@ -1,0 +1,120 @@
+2018/09/28
+100 Hamburger: 350
+101 Apple: 100
+Total calories: 450
+Calories until limit: 2050
+
+2018/09/28
+104 Veggie Pizza: 180
+100 Hamburger: 350
+Total calories: 530
+Calories until limit: 1970
+
+2018/09/28
+001 Apple: 100
+103 Hawaiian Pizza: 180
+Total calories: 280
+Calories until limit: 2220
+
+2018/09/28
+100 Hamburger: 350
+104 Veggie Pizza: 180
+Total calories: 530
+Calories until limit: 1970
+
+2018/09/28
+002 Orange: 120
+Total calories: 120
+Calories until limit: 2380
+
+2018/09/28
+102 Pepperoni Pizza: 200
+100 Hamburger: 350
+Total calories: 550
+Calories until limit: 1950
+
+2018/09/28
+100 Hamburger: 350
+001 Apple: 100
+Total calories: 450
+Calories until limit: 2050
+
+2018/09/30
+001 Apple: 100
+100 Hamburger: 350
+Total calories: 450
+Calories until limit: 2050
+
+2018/09/30
+100 Hamburger: 350
+102 Pepperoni Pizza: 200
+Total calories: 550
+Calories until limit: 1950
+
+2018/09/30
+100 Hamburger: 350
+102 Pepperoni Pizza: 200
+100 Hamburger: 350
+Total calories: 900
+Calories until limit: 1600
+
+2018/09/30
+Total calories: 300
+Calories until limit: 2200
+
+2018/09/30
+100 Hamburger: 350
+101 Apple: 100
+Total calories: 450
+Calories until limit: 2050
+
+2018/09/30
+100 Hamburger: 350
+101 Apple: 100
+104 Veggie Pizza: 180
+Total calories: 630
+Calories until limit: 1870
+
+2018/10/01
+100 Hamburger: 350
+002 Orange: 120
+Total calories: 470
+Calories until limit: 2030
+
+2018/10/04
+100 Hamburger: 350
+104 Veggie Pizza: 180
+002 Orange: 120
+Total calories: 650
+Calories until limit: 1850
+
+2018/10/04
+104 Veggie Pizza: 180
+002 Orange: 120
+Total calories: 300
+Calories until limit: 2200
+
+2018/10/04
+100 Hamburger: 350
+002 Orange: 120
+Total calories: 470
+Calories until limit: 2030
+
+2018/10/05
+100 Hamburger: 350
+104 Veggie Pizza: 180
+Total calories: 530
+Calories until limit: 1970
+
+2018/10/05
+100 Hamburger: 350
+104 Veggie Pizza: 180
+002 Orange: 120
+Total calories: 650
+Calories until limit: 1850
+
+2018/10/05
+100 Hamburger: 350
+Total calories: 350
+Calories until limit: 2150
+
