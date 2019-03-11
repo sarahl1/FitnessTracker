@@ -1,8 +1,9 @@
-2019/02/18
+2019/03/10
 
 Exercise: 
+0001  Swim                                     -300 
 
 
 Food: 
-1883  Brownie, no icing                        235     false
+1410  Deli sliced turkey or chicken breast     42      true 
 
