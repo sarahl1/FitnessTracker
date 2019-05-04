@@ -5,4 +5,4 @@ Allows a user to select food/exercise items and add them to their fitness log. T
 [Sarah Li - Non-CS account](https://github.com/sarahl1)
 
 # Acknowledgements
-Kwan
+My dear TAs
